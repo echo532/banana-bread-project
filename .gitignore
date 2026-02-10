@@ -45,6 +45,7 @@ sysinfo.txt
 # Optional: Addressables cache
 # ======================
 /Assets/AddressableAssetsData/*/*.bin*
+*.slnx
 
 # ======================
 # Keep these (important!)
