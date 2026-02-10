@@ -4,11 +4,11 @@ using UnityEngine;
 using System.IO;
 
 [InitializeOnLoad]
-static class AutoPlayerSetup
+static class AutoUISetup
 {
     const string sampleScenePath = "Assets/Scenes/SampleScene.unity";
 
-    static AutoPlayerSetup()
+    static AutoUISetup()
     {
         // Delay execution until editor is ready
         EditorApplication.delayCall += RunOnce;
@@ -16,34 +16,38 @@ static class AutoPlayerSetup
 
     static void RunOnce()
     {
-
         // Don't run during play mode
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-        
-        // Always recreate the player prefab from scratch
-        var prefab = PlayerSetupUtility.RecreatePlayerPrefab();
 
-        // If SampleScene exists, open it and replace the player instance
-        if (File.Exists(sampleScenePath) && prefab != null)
+        // Set up UIManager in the scene
+        if (File.Exists(sampleScenePath))
         {
             var scene = EditorSceneManager.OpenScene(sampleScenePath, OpenSceneMode.Single);
 
-            // Remove existing player instance if it exists
+            // Remove existing UIManager if it exists
+            GameObject existingUIManager = null;
             foreach (var root in scene.GetRootGameObjects())
             {
-                if (root.name == "Player")
+                if (root.name == "UIManager")
                 {
-                    Object.DestroyImmediate(root);
+                    existingUIManager = root;
                     break;
                 }
             }
 
-            // Add fresh player instance
-            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
-            instance.name = "Player";
-            instance.transform.position = Vector3.zero;
+            if (existingUIManager != null)
+            {
+                Object.DestroyImmediate(existingUIManager);
+            }
+
+            // Create new UIManager GameObject
+            GameObject uiManager = new GameObject("UIManager");
+            uiManager.AddComponent<UIManager>();
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
+            
+            Debug.Log("UIManager added to scene");
         }
     }
 }

@@ -2,17 +2,17 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public static class PlayerSetupUtility
+public static class EnemySetupUtility
 {
-    const string spritePath = "Assets/Textures/player_square.png";
+    const string spritePath = "Assets/Textures/enemy_sprite.png"; // TODO: Replace with your enemy texture path
 
-    public static Sprite GetOrCreatePlayerSprite()
+    public static Sprite GetOrCreateEnemySprite()
     {
         if (!File.Exists(spritePath))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(spritePath));
             Texture2D tex = new Texture2D(16, 16);
-            Color fill = Color.white;
+            Color fill = Color.red; // Default red color for enemy
             Color[] cols = new Color[16 * 16];
             for (int i = 0; i < cols.Length; i++) cols[i] = fill;
             tex.SetPixels(cols);
@@ -34,10 +34,10 @@ public static class PlayerSetupUtility
         return AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
     }
 
-    // Recreates the Player prefab from scratch at Assets/Prefabs/Player.prefab.
-    public static GameObject RecreatePlayerPrefab()
+    // Recreates the Enemy prefab from scratch at Assets/Prefabs/Enemy.prefab.
+    public static GameObject RecreateEnemyPrefab()
     {
-        const string prefabPath = "Assets/Prefabs/Player.prefab";
+        const string prefabPath = "Assets/Prefabs/Enemy.prefab";
 
         // Delete existing prefab if it exists
         if (File.Exists(prefabPath))
@@ -51,26 +51,26 @@ public static class PlayerSetupUtility
             AssetDatabase.DeleteAsset(spritePath);
         }
 
-        Sprite playerSprite = GetOrCreatePlayerSprite();
+        Sprite enemySprite = GetOrCreateEnemySprite();
 
         Directory.CreateDirectory("Assets/Prefabs");
 
-        GameObject player = new GameObject("Player");
-        var sr = player.AddComponent<SpriteRenderer>();
-        sr.sprite = playerSprite;
+        GameObject enemy = new GameObject("Enemy");
+        var sr = enemy.AddComponent<SpriteRenderer>();
+        sr.sprite = enemySprite;
         sr.sortingOrder = 0;
 
-        var rb = player.AddComponent<Rigidbody2D>();
+        var rb = enemy.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
+        rb.bodyType = RigidbodyType2D.Kinematic; // Prevent physics collisions
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        player.AddComponent<BoxCollider2D>();
-        player.AddComponent<PlayerController>();
-        player.AddComponent<HealthSystem>();
-        player.AddComponent<PlayerCollisionHandler>();
+        var collider = enemy.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true; // Make it a trigger instead of solid collision
+        enemy.AddComponent<EnemyController>();
 
-        var prefab = PrefabUtility.SaveAsPrefabAsset(player, prefabPath);
-        Object.DestroyImmediate(player);
+        var prefab = PrefabUtility.SaveAsPrefabAsset(enemy, prefabPath);
+        Object.DestroyImmediate(enemy);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
