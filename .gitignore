@@ -48,9 +48,20 @@ sysinfo.txt
 *.slnx
 
 # ======================
+# Generated Folders
+# ======================
+Assets/Textures/Generated/
+Assets/Prefabs/Generated/
+Assets/Prefabs/Generated.meta
+Assets/Textures/Generated.meta
+
+
+# ======================
 # Keep these (important!)
 # ======================
 !Assets/
 !Assets.meta
 !ProjectSettings/
 !Packages/
+
+
