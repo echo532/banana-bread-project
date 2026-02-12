@@ -54,3 +54,7 @@ sysinfo.txt
 !Assets.meta
 !ProjectSettings/
 !Packages/
+
+# extra 
+debug.txt
+debug.txt.meta

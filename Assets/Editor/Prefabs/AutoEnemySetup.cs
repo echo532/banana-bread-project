@@ -11,11 +11,25 @@ public static class AutoEnemySetup
 {
     const string prefabPath = "Assets/Prefabs/Enemy.prefab";
     const string spritePath = "Assets/Textures/enemy_sprite.png";
-    const string sampleScenePath = "Assets/Scenes/App.unity";
+    const string scenePath  = "Assets/Scenes/App.unity";
 
     static AutoEnemySetup()
     {
-        EditorApplication.delayCall += RunOnce;
+        string path = "Assets/Editor/debug.txt";
+
+        if (File.Exists(path))
+        {
+            string searchString = "yes";
+
+            
+            string contents = File.ReadAllText(path);
+
+            if (contents.Contains(searchString))
+            {
+                EditorApplication.delayCall += RunOnce;
+            }
+        }
+        
     }
 
     static void RunOnce()
@@ -23,111 +37,156 @@ public static class AutoEnemySetup
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;
 
-        GameObject prefab = GetOrCreateEnemyPrefab();
+        var prefab = RebuildEnemyPrefab();   // ALWAYS rebuild
+        if (prefab == null || !File.Exists(scenePath))
+            return;
 
-        if (File.Exists(sampleScenePath) && prefab != null)
+        var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+
+        var spawner = FindSpawner(scene);
+        if (spawner == null)
         {
-            var scene = EditorSceneManager.OpenScene(sampleScenePath, OpenSceneMode.Single);
-
-            GameObject existingSpawner = null;
-
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                if (root.name == "EnemySpawner")
-                {
-                    existingSpawner = root;
-                    break;
-                }
-            }
-
-            if (existingSpawner == null)
-            {
-                GameObject spawner = new GameObject("EnemySpawner");
-                var spawnerScript = spawner.AddComponent<EnemySpawner>();
-
-                // Set private serialized field via reflection
-                var prefabField = typeof(EnemySpawner)
-                    .GetField("enemyPrefab", BindingFlags.NonPublic | BindingFlags.Instance);
-
-                if (prefabField != null)
-                {
-                    prefabField.SetValue(spawnerScript, prefab);
-                }
-
-                EditorSceneManager.MarkSceneDirty(scene);
-                EditorSceneManager.SaveScene(scene);
-            }
+            spawner = new GameObject("EnemySpawner");
+            spawner.AddComponent<EnemySpawner>();
         }
+
+        EnsureSpawnerHasPrefab(spawner, prefab);
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
     }
 
-    // ✅ Only creates prefab if it doesn't exist
-    static GameObject GetOrCreateEnemyPrefab()
+    // --------------------------------------------------
+    // PREFAB REBUILD (GUID SAFE)
+    // --------------------------------------------------
+
+    static GameObject RebuildEnemyPrefab()
     {
-        GameObject existingPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-        if (existingPrefab != null)
-        {
-            return existingPrefab;
-        }
-
-        Sprite enemySprite = GetOrCreateEnemySprite();
-
         Directory.CreateDirectory("Assets/Prefabs");
 
-        GameObject enemy = new GameObject("Enemy");
+        // Always regenerate sprite (overwrite PNG safely)
+        var sprite = RegenerateEnemySprite();
 
-        var sr = enemy.AddComponent<SpriteRenderer>();
-        sr.sprite = enemySprite;
+        var existingPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+
+        if (existingPrefab == null)
+        {
+            var newObj = BuildEnemyObject(sprite);
+            var newPrefab = PrefabUtility.SaveAsPrefabAsset(newObj, prefabPath);
+            Object.DestroyImmediate(newObj);
+            AssetDatabase.SaveAssets();
+            return newPrefab;
+        }
+
+        // Load existing prefab contents (keeps GUID)
+        var prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
+
+        // Strip everything except Transform
+        foreach (var comp in prefabRoot.GetComponents<Component>())
+        {
+            if (!(comp is Transform))
+                Object.DestroyImmediate(comp);
+        }
+
+        foreach (Transform child in prefabRoot.transform)
+            Object.DestroyImmediate(child.gameObject);
+
+        // Rebuild structure
+        ApplyEnemyComponents(prefabRoot, sprite);
+
+        PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
+        PrefabUtility.UnloadPrefabContents(prefabRoot);
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        return AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+    }
+
+    static GameObject BuildEnemyObject(Sprite sprite)
+    {
+        var enemy = new GameObject("Enemy");
+        ApplyEnemyComponents(enemy, sprite);
+        return enemy;
+    }
+
+    static void ApplyEnemyComponents(GameObject obj, Sprite sprite)
+    {
+        var sr = obj.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
         sr.sortingOrder = 0;
 
-        var rb = enemy.AddComponent<Rigidbody2D>();
+        var rb = obj.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        var collider = enemy.AddComponent<BoxCollider2D>();
+        var collider = obj.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
 
-        enemy.AddComponent<EnemyController>();
-
-        var prefab = PrefabUtility.SaveAsPrefabAsset(enemy, prefabPath);
-
-        Object.DestroyImmediate(enemy);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-
-        return prefab;
+        obj.AddComponent<EnemyController>();
     }
 
-    static Sprite GetOrCreateEnemySprite()
-    {
-        Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
-        if (sprite != null)
-            return sprite;
+    // --------------------------------------------------
+    // SPRITE REGENERATION (GUID SAFE)
+    // --------------------------------------------------
 
+    static Sprite RegenerateEnemySprite()
+    {
         Directory.CreateDirectory(Path.GetDirectoryName(spritePath));
 
         Texture2D tex = new Texture2D(16, 16);
-        Color[] cols = new Color[16 * 16];
+        Color[] pixels = new Color[16 * 16];
 
-        for (int i = 0; i < cols.Length; i++)
-            cols[i] = Color.red;
+        for (int i = 0; i < pixels.Length; i++)
+            pixels[i] = Color.red; // ← change color here
 
-        tex.SetPixels(cols);
+        tex.SetPixels(pixels);
         tex.Apply();
 
+        // Overwrite PNG file (does NOT touch .meta)
         File.WriteAllBytes(spritePath, tex.EncodeToPNG());
-        AssetDatabase.ImportAsset(spritePath);
+        AssetDatabase.ImportAsset(spritePath, ImportAssetOptions.ForceUpdate);
 
-        var ti = AssetImporter.GetAtPath(spritePath) as TextureImporter;
-        if (ti != null)
+        var importer = AssetImporter.GetAtPath(spritePath) as TextureImporter;
+        if (importer != null)
         {
-            ti.textureType = TextureImporterType.Sprite;
-            ti.filterMode = FilterMode.Point;
-            ti.spritePixelsPerUnit = 100;
-            ti.SaveAndReimport();
+            importer.textureType = TextureImporterType.Sprite;
+            importer.filterMode = FilterMode.Point;
+            importer.spritePixelsPerUnit = 100;
+            importer.SaveAndReimport();
         }
 
         return AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+    }
+
+    // --------------------------------------------------
+    // SCENE HELPERS
+    // --------------------------------------------------
+
+    static GameObject FindSpawner(Scene scene)
+    {
+        foreach (var root in scene.GetRootGameObjects())
+            if (root.name == "EnemySpawner")
+                return root;
+
+        return null;
+    }
+
+    static void EnsureSpawnerHasPrefab(GameObject spawner, GameObject prefab)
+    {
+        var spawnerScript = spawner.GetComponent<EnemySpawner>();
+        if (spawnerScript == null)
+            return;
+
+        var field = typeof(EnemySpawner)
+            .GetField("enemyPrefab", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        if (field != null)
+        {
+            field.SetValue(spawnerScript, prefab);
+            EditorUtility.SetDirty(spawnerScript);
+        }
     }
 }
 #endif
