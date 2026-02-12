@@ -20,8 +20,6 @@ public static class AutoEnemySetup
         if (File.Exists(path))
         {
             string searchString = "yes";
-
-            
             string contents = File.ReadAllText(path);
 
             if (contents.Contains(searchString))
@@ -29,7 +27,6 @@ public static class AutoEnemySetup
                 EditorApplication.delayCall += RunOnce;
             }
         }
-        
     }
 
     static void RunOnce()
@@ -57,7 +54,7 @@ public static class AutoEnemySetup
     }
 
     // --------------------------------------------------
-    // PREFAB REBUILD (GUID SAFE)
+    // PREFAB REBUILD (GUID SAFE, FILEID STABLE)
     // --------------------------------------------------
 
     static GameObject RebuildEnemyPrefab()
@@ -78,21 +75,11 @@ public static class AutoEnemySetup
             return newPrefab;
         }
 
-        // Load existing prefab contents (keeps GUID)
+        // Load existing prefab contents (keeps GUID and fileIDs)
         var prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
 
-        // Strip everything except Transform
-        foreach (var comp in prefabRoot.GetComponents<Component>())
-        {
-            if (!(comp is Transform))
-                Object.DestroyImmediate(comp);
-        }
-
-        foreach (Transform child in prefabRoot.transform)
-            Object.DestroyImmediate(child.gameObject);
-
-        // Rebuild structure
-        ApplyEnemyComponents(prefabRoot, sprite);
+        // --- UPDATE OR ADD COMPONENTS ONLY ---
+        UpdateOrAddEnemyComponents(prefabRoot, sprite);
 
         PrefabUtility.SaveAsPrefabAsset(prefabRoot, prefabPath);
         PrefabUtility.UnloadPrefabContents(prefabRoot);
@@ -106,25 +93,33 @@ public static class AutoEnemySetup
     static GameObject BuildEnemyObject(Sprite sprite)
     {
         var enemy = new GameObject("Enemy");
-        ApplyEnemyComponents(enemy, sprite);
+        UpdateOrAddEnemyComponents(enemy, sprite);
         return enemy;
     }
 
-    static void ApplyEnemyComponents(GameObject obj, Sprite sprite)
+    static void UpdateOrAddEnemyComponents(GameObject obj, Sprite sprite)
     {
-        var sr = obj.AddComponent<SpriteRenderer>();
+        // SpriteRenderer
+        var sr = obj.GetComponent<SpriteRenderer>();
+        if (sr == null) sr = obj.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.sortingOrder = 0;
 
-        var rb = obj.AddComponent<Rigidbody2D>();
+        // Rigidbody2D
+        var rb = obj.GetComponent<Rigidbody2D>();
+        if (rb == null) rb = obj.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        var collider = obj.AddComponent<BoxCollider2D>();
-        collider.isTrigger = true;
+        // BoxCollider2D
+        var col = obj.GetComponent<BoxCollider2D>();
+        if (col == null) col = obj.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
 
-        obj.AddComponent<EnemyController>();
+        // EnemyController
+        if (obj.GetComponent<EnemyController>() == null)
+            obj.AddComponent<EnemyController>();
     }
 
     // --------------------------------------------------
