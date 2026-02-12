@@ -6,7 +6,7 @@ using System.IO;
 [InitializeOnLoad]
 static class AutoPlayerSetup
 {
-    const string sampleScenePath = "Assets/Scenes/SampleScene.unity";
+    const string sampleScenePath = "Assets/Scenes/App.unity";
 
     static AutoPlayerSetup()
     {
