@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public static class PlayerSetupUtility
+public static class AutoPlayerSetup
 {
     const string spritePath = "Assets/Textures/player_square.png";
 
