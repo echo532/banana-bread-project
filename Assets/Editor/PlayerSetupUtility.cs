@@ -4,7 +4,9 @@ using System.IO;
 
 public static class PlayerSetupUtility
 {
-    const string spritePath = "Assets/Textures/player_square.png";
+    const string spritePath = EditorAssetUtility.GeneratedTextures + "player_square.png";
+
+    const string prefabPath = EditorAssetUtility.GeneratedPrefabs + "Player.prefab";
 
     public static Sprite GetOrCreatePlayerSprite()
     {
@@ -33,11 +35,13 @@ public static class PlayerSetupUtility
 
         return AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
     }
+    
 
     // Recreates the Player prefab from scratch at Assets/Prefabs/Player.prefab.
     public static GameObject RecreatePlayerPrefab()
     {
-        const string prefabPath = "Assets/Prefabs/Player.prefab";
+
+        EditorAssetUtility.EnsureFolder(EditorAssetUtility.GeneratedPrefabs);
 
         // Delete existing prefab if it exists
         if (File.Exists(prefabPath))

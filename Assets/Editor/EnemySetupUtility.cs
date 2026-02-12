@@ -4,7 +4,9 @@ using System.IO;
 
 public static class EnemySetupUtility
 {
-    const string spritePath = "Assets/Textures/enemy_sprite.png"; // TODO: Replace with your enemy texture path
+    const string spritePath =  EditorAssetUtility.GeneratedTextures + "/enemy_sprite.png"; // TODO: Replace with your enemy texture path
+
+    const string prefabPath = EditorAssetUtility.GeneratedPrefabs + "/Enemy.prefab";
 
     public static Sprite GetOrCreateEnemySprite()
     {
@@ -37,7 +39,7 @@ public static class EnemySetupUtility
     // Recreates the Enemy prefab from scratch at Assets/Prefabs/Enemy.prefab.
     public static GameObject RecreateEnemyPrefab()
     {
-        const string prefabPath = "Assets/Prefabs/Enemy.prefab";
+        
 
         // Delete existing prefab if it exists
         if (File.Exists(prefabPath))
@@ -53,7 +55,7 @@ public static class EnemySetupUtility
 
         Sprite enemySprite = GetOrCreateEnemySprite();
 
-        Directory.CreateDirectory("Assets/Prefabs");
+        Directory.CreateDirectory(EditorAssetUtility.GeneratedPrefabs);
 
         GameObject enemy = new GameObject("Enemy");
         var sr = enemy.AddComponent<SpriteRenderer>();
