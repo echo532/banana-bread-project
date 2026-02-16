@@ -13,23 +13,7 @@ public static class AutoEnemySetup
     const string spritePath = "Assets/Textures/enemy_sprite.png";
     const string scenePath  = "Assets/Scenes/App.unity";
 
-    static AutoEnemySetup()
-    {
-        string path = "Assets/Editor/debug.txt";
-
-        if (File.Exists(path))
-        {
-            string searchString = "yes";
-            string contents = File.ReadAllText(path);
-
-            if (contents.Contains(searchString))
-            {
-                EditorApplication.delayCall += RunOnce;
-            }
-        }
-    }
-
-    static void RunOnce()
+    public static void RunOnce()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;

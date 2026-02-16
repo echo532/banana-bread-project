@@ -11,20 +11,7 @@ public static class AutoPlayerSetup
     const string spritePath = "Assets/Textures/player_square.png";
     const string prefabPath = "Assets/Prefabs/Player.prefab";
 
-    static AutoPlayerSetup()
-    {
-        string path = "Assets/Editor/debug.txt";
-        if (File.Exists(path))
-        {
-            string contents = File.ReadAllText(path);
-            if (contents.Contains("yes"))
-            {
-                EditorApplication.delayCall += RunOnce;
-            }
-        }
-    }
-
-    static void RunOnce()
+    public static void RunOnce()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;

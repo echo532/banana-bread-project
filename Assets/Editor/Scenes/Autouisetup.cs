@@ -5,17 +5,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-[InitializeOnLoad]
 public static class AutoUISetup
 {
     const string sampleScenePath = "Assets/Scenes/SampleScene.unity";
 
-    static AutoUISetup()
-    {
-        EditorApplication.delayCall += RunOnce;
-    }
-
-    static void RunOnce()
+    public static void RunOnce()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;
