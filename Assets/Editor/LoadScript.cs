@@ -4,24 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-[InitializeOnLoad]
+
 public static class LoadScript
 {
-    
-    static LoadScript()
-    {
-        string path = "Assets/Editor/debug.txt";
-        if (File.Exists(path))
-        {
-            string contents = File.ReadAllText(path);
-            if (contents.Contains("yes"))
-            {
-                EditorApplication.delayCall += LoadAllScenes;
-            }
-        }
-    }
 
-    [MenuItem("Tools/Generate Start Menu")]
+    [MenuItem("Tools/Build Ojects")]
     static void LoadAllScenes()
     {
         //Menu Scene
@@ -30,6 +17,11 @@ public static class LoadScript
         AutoUISetup.RunOnce();
         AutoPlayerSetup.RunOnce();
         AutoEnemySetup.RunOnce();
+
+        EditorApplication.delayCall += () =>
+        {
+            EditorSceneManager.OpenScene("Assets/Scenes/StartMenu.unity");
+        };
         
     }
 

@@ -40,7 +40,6 @@ public static class MenuSetup
         eventSystemGO.AddComponent<EventSystem>();
 
         var inputModule = eventSystemGO.AddComponent<InputSystemUIInputModule>();
-        inputModule.AssignDefaultActions(); // required for new Input System
 
         // -------------------------
         // Menu Controller

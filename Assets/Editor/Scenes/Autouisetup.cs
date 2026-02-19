@@ -7,18 +7,41 @@ using System.IO;
 
 public static class AutoUISetup
 {
-    const string sampleScenePath = "Assets/Scenes/SampleScene.unity";
+    const string sampleScenePath = "Assets/Scenes/App.unity";
 
     public static void RunOnce()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;
 
+        Scene scene;
+
+        // --------------------------------------------------
+        // CREATE SCENE IF MISSING
+        // --------------------------------------------------
         if (!File.Exists(sampleScenePath))
-            return;
+        {
+            Directory.CreateDirectory("Assets/Scenes");
 
-        var scene = EditorSceneManager.OpenScene(sampleScenePath, OpenSceneMode.Single);
+            scene = EditorSceneManager.NewScene(
+                NewSceneSetup.DefaultGameObjects,
+                NewSceneMode.Single
+            );
 
+            EditorSceneManager.SaveScene(scene, sampleScenePath);
+            Debug.Log("Scene created at " + sampleScenePath);
+        }
+        else
+        {
+            scene = EditorSceneManager.OpenScene(
+                sampleScenePath,
+                OpenSceneMode.Single
+            );
+        }
+
+        // --------------------------------------------------
+        // ENSURE UIManager EXISTS
+        // --------------------------------------------------
         bool uiManagerExists = false;
 
         foreach (var root in scene.GetRootGameObjects())
@@ -30,7 +53,6 @@ public static class AutoUISetup
             }
         }
 
-        // ✅ Only create if missing
         if (!uiManagerExists)
         {
             GameObject uiManager = new GameObject("UIManager");
