@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
-
+[InitializeOnLoad]
 public static class LoadScript
 {
 
