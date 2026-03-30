@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1436595404547106717, guid: 10c20a40c4f38264abf79ed7bb5ce69b, type: 3}
+  m_Sprite: {fileID: -1367291550803677559, guid: 7cf8d7ad6cfe9d541843fcfe3cd7dc36, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -161,7 +161,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 3.95, y: 4.58}
     newSize: {x: 0.16, y: 0.16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -182,7 +182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
-  bulletPrefab: {fileID: 4155931140708610257, guid: 721ae8b8f9998174c9668b377f1ddbc9, type: 3}
 --- !u!114 &3430912285737438619
 MonoBehaviour:
   m_ObjectHideFlags: 0

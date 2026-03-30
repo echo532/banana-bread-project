@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7796580252034250580}
   - component: {fileID: 90670320597493941}
   - component: {fileID: 7964070529861942368}
+  - component: {fileID: 4563307227643959619}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -181,3 +182,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   moveSpeed: 2
   directionChangeInterval: 2
+--- !u!114 &4563307227643959619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828007380593289671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0042af85bd257e1418d9f77ed907f5aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHit

@@ -1,7 +1,5 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 using UnityEngine.InputSystem;
-#endif
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -9,8 +7,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Movement speed in units/second")]
     public float moveSpeed = 5f;
 
-    Rigidbody2D rb;
-    Vector2 movement;
+    private Rigidbody2D rb;
+    private Vector2 movement;
 
     void Awake()
     {
@@ -21,8 +19,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
         Vector2 move = Vector2.zero;
+
+        // --- Keyboard input ---
         var kb = Keyboard.current;
         if (kb != null)
         {
@@ -32,28 +31,17 @@ public class PlayerController : MonoBehaviour
             if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) move.x -= 1f;
         }
 
+        // --- Gamepad input ---
         var gp = Gamepad.current;
         if (gp != null)
         {
             move += gp.leftStick.ReadValue();
         }
 
+        // Normalize diagonal movement
+        if (move.sqrMagnitude > 1f) move.Normalize();
+
         movement = move;
-#else
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        // Fallback to explicit WASD keys if axes aren't configured
-        if (Mathf.Approximately(x, 0f) && Mathf.Approximately(y, 0f))
-        {
-            x = (Input.GetKey(KeyCode.D) ? 1f : 0f) - (Input.GetKey(KeyCode.A) ? 1f : 0f);
-            y = (Input.GetKey(KeyCode.W) ? 1f : 0f) - (Input.GetKey(KeyCode.S) ? 1f : 0f);
-        }
-
-        movement = new Vector2(x, y);
-#endif
-
-        if (movement.sqrMagnitude > 1f) movement.Normalize();
     }
 
     void FixedUpdate()
