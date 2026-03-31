@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
 
     private Rigidbody2D rb;
+
+    [SerializeField] public Transform visual;
     private Vector2 movement;
 
     void Awake()
@@ -42,6 +44,15 @@ public class PlayerController : MonoBehaviour
         if (move.sqrMagnitude > 1f) move.Normalize();
 
         movement = move;
+
+        if (movement.x > 0)
+        {
+            visual.localScale = new Vector3(1, 1, 1);
+        }
+        else if (movement.x < 0)
+        {
+            visual.localScale = new Vector3(-1, 1, 1);
+        }
     }
 
     void FixedUpdate()
