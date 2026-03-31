@@ -15,16 +15,33 @@ public class EnemyHit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the collider belongs to the sword
-        if (other.CompareTag("Weapon"))
+        int damage = 0;
+
+        // Check for IWeapon
+        IWeapon weapon = other.GetComponent<IWeapon>();
+        if (weapon != null)
         {
-            currentHealth-= 5;
-            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+            damage = weapon.Damage;
+        }
+        else
+        {
+            // Check for IProjectile
+            IProjectile projectile = other.GetComponent<IProjectile>();
+            if (projectile != null)
+            {
+                damage = projectile.Damage;
+            }
         }
 
-        if(currentHealth <= 0)
+        if (damage > 0)
         {
-            Die();
+            currentHealth -= damage;
+            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 

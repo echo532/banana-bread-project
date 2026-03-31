@@ -1,12 +1,19 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-public class Arrow : MonoBehaviour
+public class Arrow : MonoBehaviour, IProjectile
 {
     public float speed = 10f;
-    public int damage = 1;
+    
+    private int damage;
 
+    public void SetDamage(int damageAmount)
+    {
+        damage = damageAmount;
+    }
     private Rigidbody2D rb;
+
+    public int Damage => damage;
 
     void Awake()
     {

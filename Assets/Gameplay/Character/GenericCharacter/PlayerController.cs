@@ -12,11 +12,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public Transform visual;
     private Vector2 movement;
 
+    private IWeapon[] weapons;
+
+    private IWeapon currentWeapon;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        weapons = GetComponentsInChildren<IWeapon>(true);
+        EquipWeapon(0); // Bow
+        //EquipWeapon(1); // Sword
+    }
+    public void EquipWeapon(int index)
+    {
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            (weapons[i] as MonoBehaviour).gameObject.SetActive(i == index);
+        }
+        currentWeapon = weapons[index];
     }
 
     void Update()
@@ -45,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
         movement = move;
 
+        // --- Movement-based flipping (default) ---
         if (movement.x > 0)
         {
             visual.localScale = new Vector3(1, 1, 1);
@@ -53,6 +70,26 @@ public class PlayerController : MonoBehaviour
         {
             visual.localScale = new Vector3(-1, 1, 1);
         }
+
+        // --- Attack input ---
+        var mouse = Mouse.current;
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+        {
+            // Determine direction relative to mouse
+            Vector3 mousePos = mouse.position.ReadValue();
+            Vector3 worldMouse = Camera.main.ScreenToWorldPoint(mousePos);
+            float direction = Mathf.Sign(worldMouse.x - transform.position.x);
+
+            // Temporarily flip visual to face mouse
+            Vector3 originalScale = visual.localScale;
+            visual.localScale = new Vector3(Mathf.Abs(visual.localScale.x) * direction, 1, 1);
+
+            // Trigger attack
+            currentWeapon.Attack();
+        }
+
+
+
     }
 
     void FixedUpdate()

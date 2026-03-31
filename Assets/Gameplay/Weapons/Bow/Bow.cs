@@ -1,25 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Bow : MonoBehaviour
+public class Bow : MonoBehaviour, IWeapon
 {
     public GameObject arrowPrefab;
     public Transform firePoint; // empty GameObject at bow tip
 
-    void Update()
-    {
-        var mouse = Mouse.current;
-        if (mouse != null)
-        {
-            
-            if (mouse.leftButton.wasPressedThisFrame)
-            {
-                FireArrow();
-            }
-        }
-    }
+    private int damage = 2;
 
-    void FireArrow()
+    public int Damage => damage;
+
+    public void Attack()
     {
         if (arrowPrefab == null || firePoint == null) return;
 
@@ -30,6 +21,7 @@ public class Bow : MonoBehaviour
         GameObject arrowGO = Instantiate(arrowPrefab, firePoint.position, Quaternion.identity);
         
         Arrow arrow = arrowGO.GetComponent<Arrow>();
+        arrow.SetDamage(damage);
         arrow.Shoot(direction);
     }
 
