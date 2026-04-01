@@ -21,31 +21,27 @@ public class EnemyHit : MonoBehaviour
 
         // Check for IWeapon
         IWeapon weapon = other.GetComponent<IWeapon>();
-        if (weapon != null)
+        IProjectile projectile = other.GetComponent<IProjectile>();
+        if (weapon != null && other.CompareTag("Weapon")) //check that it is a player weapon, not an enemy weapon
         {
             damage = weapon.Damage;
-             ShowDamageNumber(damage, "fire");
         }
-        else
+        else if(projectile != null && other.CompareTag("Weapon")) //check that it is a player projectile, not an enemy projectile
         {
-            // Check for IProjectile
-            IProjectile projectile = other.GetComponent<IProjectile>();
-            if (projectile != null)
-            {
-                damage = projectile.Damage;
-                 ShowDamageNumber(damage, "fire");
-            }
+            damage = projectile.Damage;
         }
-        if (damage > 0)
-        {
-            currentHealth -= damage;
-            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+    
 
-            if (currentHealth <= 0)
-            {
-                Die();
-            }
+        ShowDamageNumber(damage, "fire");
+
+        currentHealth -= damage;
+        healthBar.UpdateHealthBar(currentHealth, maxHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
         }
+        
     }
 
     private void Die()

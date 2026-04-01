@@ -18,19 +18,41 @@ public class PlayerCollisionHandler : MonoBehaviour
     }
     
     void OnTriggerStay2D(Collider2D other)
-    {
+    {   
+        IWeapon weapon = other.GetComponent<IWeapon>();
+        IProjectile projectile = other.GetComponent<IProjectile>();
+
         // Check if we hit an enemy
-        if (other.gameObject.name.StartsWith("Enemy"))
+        if (weapon != null && other.CompareTag("Enemy"))
         {
-            // Check cooldown to prevent rapid damage
-            if (Time.time - lastDamageTime >= damageCooldown)
+            HandleDamage(weapon.Damage);
+        }
+        else if (projectile != null && other.CompareTag("Enemy"))
+        {
+            HandleDamage(projectile.Damage);
+        }
+
+        // Check cooldown to prevent rapid damage
+        if (Time.time - lastDamageTime >= damageCooldown)
+        {
+            if (healthSystem != null)
             {
-                if (healthSystem != null)
-                {
-                    healthSystem.TakeDamage(damagePerHit);
-                    lastDamageTime = Time.time;
-                    Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
-                }
+                healthSystem.TakeDamage(weapon.Damage);
+                lastDamageTime = Time.time;
+                Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
+            }
+        }
+    }
+
+    private void HandleDamage(int dmg)
+    {
+        if (Time.time - lastDamageTime >= damageCooldown)
+        {
+            if (healthSystem != null)
+            {
+                healthSystem.TakeDamage(dmg);
+                lastDamageTime = Time.time;
+                Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
             }
         }
     }
