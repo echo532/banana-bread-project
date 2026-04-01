@@ -465,6 +465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHit
   maxHealth: 10
   currentHealth: 0
+  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
   healthBar: {fileID: 7972626737787535069}
 --- !u!1 &7655068999836807677
 GameObject:
