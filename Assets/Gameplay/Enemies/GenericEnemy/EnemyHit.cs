@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
  // assign your Canvas
 
 [RequireComponent(typeof(Collider2D))]
@@ -8,7 +9,7 @@ public class EnemyHit : MonoBehaviour
     public int currentHealth;
     public GameObject DamageTextPrefab;
     public EnemyHealthbar healthBar;
-
+    private List<GameObject> activeDamageTexts = new List<GameObject>();
     private void Start()
     {
         currentHealth = maxHealth;
@@ -54,11 +55,21 @@ public class EnemyHit : MonoBehaviour
     }
     void ShowDamageNumber(int damage, string element)
 {
-    GameObject dmgText = Instantiate(
-        DamageTextPrefab,
-        transform.position + Vector3.up,
-        Quaternion.identity
-    );
+    GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
+
+     // Stack offset
+    float yOffset = activeDamageTexts.Count * Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+    float xOffset = Random.Range(-0.5f, 0.5f); // horizontal variation
+    dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
+
+    // Set damage & element
     dmgText.GetComponent<DamageText>().SetDamage(damage, element);
+
+    // Track active number
+    activeDamageTexts.Add(dmgText);
+
+    // Remove when lifetime ends
+    DamageText dt = dmgText.GetComponent<DamageText>();
+    dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
 }
 }
