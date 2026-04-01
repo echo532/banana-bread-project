@@ -5,7 +5,7 @@ public class DamageText : MonoBehaviour
 {
     public float moveSpeed = 2f;
     public float lifetime = 1f;
-
+    public System.Action OnDestroyEvent;
     private TextMeshPro text;
     private Color color;
 
@@ -22,7 +22,7 @@ public class DamageText : MonoBehaviour
         if(element == "fire")
         {
             color = Color.red;
-            moveSpeed = 5f;
+            moveSpeed = 0.5f;
 
         }
 
@@ -35,13 +35,13 @@ public class DamageText : MonoBehaviour
     {
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
 
-        // Fade out
         color.a -= Time.deltaTime / lifetime;
         text.color = color;
 
         if (color.a <= 0)
         {
+            OnDestroyEvent?.Invoke(); // tell spawner it’s gone
             Destroy(gameObject);
         }
-           }
+    }
 }
