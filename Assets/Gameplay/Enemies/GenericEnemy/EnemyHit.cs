@@ -1,11 +1,12 @@
 using UnityEngine;
+ // assign your Canvas
 
 [RequireComponent(typeof(Collider2D))]
 public class EnemyHit : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 10;
     public int currentHealth;
-
+    public GameObject DamageTextPrefab;
     public EnemyHealthbar healthBar;
 
     private void Start()
@@ -22,6 +23,7 @@ public class EnemyHit : MonoBehaviour
         if (weapon != null)
         {
             damage = weapon.Damage;
+             ShowDamageNumber(damage);
         }
         else
         {
@@ -30,9 +32,9 @@ public class EnemyHit : MonoBehaviour
             if (projectile != null)
             {
                 damage = projectile.Damage;
+                 ShowDamageNumber(damage);
             }
         }
-
         if (damage > 0)
         {
             currentHealth -= damage;
@@ -50,4 +52,14 @@ public class EnemyHit : MonoBehaviour
         // Optional: play death animation, effects, sound, etc.
         Destroy(gameObject);
     }
+    void ShowDamageNumber(int damage)
+{
+    GameObject dmgText = Instantiate(
+        DamageTextPrefab,
+        transform.position + Vector3.up,
+        Quaternion.identity
+    );
+    dmgText.transform.SetAsLastSibling();
+    dmgText.GetComponent<DamageText>().SetDamage(damage);
+}
 }

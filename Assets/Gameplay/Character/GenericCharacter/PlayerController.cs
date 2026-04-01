@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         weapons = GetComponentsInChildren<IWeapon>(true);
-        EquipWeapon(0); // Bow
-        //EquipWeapon(1); // Sword
+        //EquipWeapon(0); // Bow
+        EquipWeapon(1); // Sword
     }
     public void EquipWeapon(int index)
     {
