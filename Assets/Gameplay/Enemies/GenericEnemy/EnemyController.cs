@@ -9,6 +9,12 @@ public class EnemyController : MonoBehaviour
     private float timeSinceDirectionChange;
     private Camera mainCamera;
     private Vector2 screenBounds;
+
+    public float MoveSpeed
+    {
+        get { return moveSpeed; }
+        set { moveSpeed = value; }
+    }
     
     void Start()
     {

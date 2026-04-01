@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class ChasingEnemyController : EnemyController
+public class MeleeEnemyController : EnemyController
 {
-    [SerializeField] private float moveSpeed = 2f;       // Maximum movement speed
     [SerializeField] private float stoppingDistance = 0.5f; // How close to the player it stops
     
     private Transform playerTransform;
     
     void Start()
     {
+        MoveSpeed = 2f;
         // Find the player in the scene (assumes tag "Player")
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -35,11 +35,11 @@ public class ChasingEnemyController : EnemyController
         if (distance > stoppingDistance)
         {
             // Move towards player, limited by moveSpeed
-            Vector2 move = direction * moveSpeed * Time.deltaTime;
+            Vector2 move = direction * MoveSpeed * Time.deltaTime;
             
             // Optional: Clamp to max speed (not strictly necessary here)
-            if (move.magnitude > moveSpeed * Time.deltaTime)
-                move = move.normalized * moveSpeed * Time.deltaTime;
+            if (move.magnitude > MoveSpeed * Time.deltaTime)
+                move = move.normalized * MoveSpeed * Time.deltaTime;
             
             transform.Translate(move);
         }
