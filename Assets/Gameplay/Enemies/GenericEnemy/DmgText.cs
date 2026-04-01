@@ -13,11 +13,22 @@ public class DamageText : MonoBehaviour
     {
         text = GetComponent<TextMeshPro>();
         color = text.color;
+
     }
 
-    public void SetDamage(int damage)
+    public void SetDamage(int damage, string element)
     {
         text.text = damage.ToString();
+        if(element == "fire")
+        {
+            color = Color.red;
+            moveSpeed = 5f;
+
+        }
+
+                
+        
+
     }
 
     void Update()

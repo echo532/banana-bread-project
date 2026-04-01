@@ -23,7 +23,7 @@ public class EnemyHit : MonoBehaviour
         if (weapon != null)
         {
             damage = weapon.Damage;
-             ShowDamageNumber(damage);
+             ShowDamageNumber(damage, "fire");
         }
         else
         {
@@ -32,7 +32,7 @@ public class EnemyHit : MonoBehaviour
             if (projectile != null)
             {
                 damage = projectile.Damage;
-                 ShowDamageNumber(damage);
+                 ShowDamageNumber(damage, "fire");
             }
         }
         if (damage > 0)
@@ -52,14 +52,13 @@ public class EnemyHit : MonoBehaviour
         // Optional: play death animation, effects, sound, etc.
         Destroy(gameObject);
     }
-    void ShowDamageNumber(int damage)
+    void ShowDamageNumber(int damage, string element)
 {
     GameObject dmgText = Instantiate(
         DamageTextPrefab,
         transform.position + Vector3.up,
         Quaternion.identity
     );
-    dmgText.transform.SetAsLastSibling();
-    dmgText.GetComponent<DamageText>().SetDamage(damage);
+    dmgText.GetComponent<DamageText>().SetDamage(damage, element);
 }
 }
