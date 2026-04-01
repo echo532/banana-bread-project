@@ -40,12 +40,12 @@ public class EnemyController : MonoBehaviour
         moveDirection = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
     }
     
-    void CalculateScreenBounds()
+    public void CalculateScreenBounds()
     {
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
     }
     
-    void ClampToScreenBounds()
+    public void ClampToScreenBounds()
     {
         Vector3 pos = transform.position;
         pos.x = Mathf.Clamp(pos.x, -screenBounds.x, screenBounds.x);
