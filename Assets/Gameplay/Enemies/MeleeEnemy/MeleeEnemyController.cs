@@ -5,8 +5,12 @@ public class MeleeEnemyController : EnemyController
     [SerializeField] private float stoppingDistance = 0.5f; // How close to the player it stops
     
     private Transform playerTransform;
+
+    private int damage = 4;
+
+    public override int Damage => damage;
     
-    void Start()
+    protected override void Start()
     {
         MoveSpeed = 2f;
         // Find the player in the scene (assumes tag "Player")

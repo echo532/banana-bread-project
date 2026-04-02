@@ -10,7 +10,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
       propertyPath: m_Name
-      value: Enemy Variant
+      value: RangedEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249531980382036184, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6061432483175592133, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284256884688637201, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7737254326911115108, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51,6 +67,10 @@ PrefabInstance:
     - target: {fileID: 7737254326911115108, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8272281376598136166, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

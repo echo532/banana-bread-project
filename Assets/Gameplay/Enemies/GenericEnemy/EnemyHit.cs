@@ -30,17 +30,22 @@ public class EnemyHit : MonoBehaviour
         {
             damage = projectile.Damage;
         }
+
+        if(damage > 0)
+        {
+            ShowDamageNumber(damage, "fire");
+
+            currentHealth -= damage;
+            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+        }
     
 
-        ShowDamageNumber(damage, "fire");
-
-        currentHealth -= damage;
-        healthBar.UpdateHealthBar(currentHealth, maxHealth);
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        
         
     }
 
@@ -50,22 +55,22 @@ public class EnemyHit : MonoBehaviour
         Destroy(gameObject);
     }
     void ShowDamageNumber(int damage, string element)
-{
-    GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
+    {
+        GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
-     // Stack offset
-    float yOffset = activeDamageTexts.Count * Random.Range(-0.02f, 0.02f); // 0.3 units above previous
-    float xOffset = Random.Range(-0.5f, 0.5f); // horizontal variation
-    dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
+        // Stack offset
+        float yOffset = activeDamageTexts.Count * Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+        float xOffset = Random.Range(-0.5f, 0.5f); // horizontal variation
+        dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
-    // Set damage & element
-    dmgText.GetComponent<DamageText>().SetDamage(damage, element);
+        // Set damage & element
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element);
 
-    // Track active number
-    activeDamageTexts.Add(dmgText);
+        // Track active number
+        activeDamageTexts.Add(dmgText);
 
-    // Remove when lifetime ends
-    DamageText dt = dmgText.GetComponent<DamageText>();
-    dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
-}
+        // Remove when lifetime ends
+        DamageText dt = dmgText.GetComponent<DamageText>();
+        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
+    }
 }

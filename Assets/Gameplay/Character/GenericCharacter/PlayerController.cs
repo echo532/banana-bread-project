@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private IWeapon[] weapons;
 
     private IWeapon currentWeapon;
+    [SerializeField] private int startingWeaponIndex = 0;
 
     void Awake()
     {
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         weapons = GetComponentsInChildren<IWeapon>(true);
-        EquipWeapon(0); // Bow
+        EquipWeapon(startingWeaponIndex); // Bow
         //EquipWeapon(1); // Sword
     }
     public void EquipWeapon(int index)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IEnemy
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float directionChangeInterval = 2f;
@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     private float timeSinceDirectionChange;
     private Camera mainCamera;
     private Vector2 screenBounds;
+
+    public virtual int Damage => 2; 
 
     public float MoveSpeed
     {
@@ -82,5 +84,11 @@ public class EnemyController : MonoBehaviour
             moveDirection.x *= -1;
         if (pos.y <= -screenBounds.y || pos.y >= screenBounds.y)
             moveDirection.y *= -1;
+    }
+    
+
+    public void Attack()
+    {
+        // empty, this enemy doesn't attack
     }
 }
