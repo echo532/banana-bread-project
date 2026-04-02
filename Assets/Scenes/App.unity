@@ -150,11 +150,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1582737052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &198576637 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7737254326911115108, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
-  m_PrefabInstance: {fileID: 4200290949505806468}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &275283643
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,52 +194,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &283375789
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 283375790}
-  - component: {fileID: 283375791}
-  m_Layer: 7
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &283375790
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283375789}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 198576637}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &283375791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283375789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteLibrary
-  m_Library: []
-  m_SpriteLibraryAsset: {fileID: 0}
 --- !u!1 &552057115
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +315,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4561322547267732209, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4561322547267732209, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: DamageTextPrefab
+      value: 
+      objectReference: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
     - target: {fileID: 4853524877579533331, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -442,6 +399,10 @@ PrefabInstance:
       propertyPath: visual
       value: 
       objectReference: {fileID: 552057116}
+    - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: startingWeaponIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9018953235643383612, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: m_Size.x
       value: 3.0774076
@@ -1011,7 +972,8 @@ GameObject:
   - component: {fileID: 1881794520}
   - component: {fileID: 1881794522}
   - component: {fileID: 1881794521}
-  m_Layer: 6
+  - component: {fileID: 1881794523}
+  m_Layer: 8
   m_Name: Sword
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -1182,6 +1144,33 @@ PolygonCollider2D:
       - {x: 1.035, y: -0.61}
       - {x: 0.79499996, y: -0.47}
   m_UseDelaunayMesh: 1
+--- !u!50 &1881794523
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1881794518}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!4 &1999022518 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5544151371949570624, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
@@ -1261,10 +1250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7737254326911115108, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 283375790}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
 --- !u!1660057539 &9223372036854775807
