@@ -53,7 +53,7 @@ public class PlayerCollisionHandler : MonoBehaviour
             if (healthSystem != null)
             {
                 healthSystem.TakeDamage(dmg);
-                ShowDamageNumber(dmg, "");
+                ShowDamageNumber(dmg, "playerhit");
                 lastDamageTime = Time.time;
                 Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
             }
