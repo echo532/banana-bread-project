@@ -50,6 +50,8 @@ public class DamageText : MonoBehaviour
             maxScale = 2.0f;
             shakeDuration = 0.15f;
             shakeMagnitude = 0.075f;
+            dmgTextRect.pivot = new Vector2(0.5f, 0.8f);
+
         } else
         {
             if (crit)

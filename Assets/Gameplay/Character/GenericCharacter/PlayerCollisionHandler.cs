@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerCollisionHandler : MonoBehaviour
 {
     [SerializeField] private int damagePerHit = 10;
-    [SerializeField] private float damageCooldown = 1f; // Prevent taking damage too rapidly
+    [SerializeField] private float damageCooldown = 0.5f; // Prevent taking damage too rapidly
     
     private HealthSystem healthSystem;
     private float lastDamageTime = -999f;
@@ -12,9 +13,12 @@ public class PlayerCollisionHandler : MonoBehaviour
     public GameObject DamageTextPrefab;
 
     private List<GameObject> activeDamageTexts = new List<GameObject>();
+    public SpriteRenderer spriteRenderer; // Assign in Inspector
+    private Color originalColor;
     
     void Start()
     {
+        originalColor = spriteRenderer.color; // store the original color
         healthSystem = GetComponent<HealthSystem>();
         if (healthSystem == null)
         {
@@ -53,6 +57,7 @@ public class PlayerCollisionHandler : MonoBehaviour
             if (healthSystem != null)
             {
                 healthSystem.TakeDamage(dmg);
+                StartCoroutine(FlashRed());
                 ShowDamageNumber(dmg, "playerhit");
                 lastDamageTime = Time.time;
                 Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
@@ -79,4 +84,18 @@ public class PlayerCollisionHandler : MonoBehaviour
         DamageText dt = dmgText.GetComponent<DamageText>();
         dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
     }
+    IEnumerator FlashRed()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // Turn red
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.15f);
+
+            // Back to original color
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
+
 }

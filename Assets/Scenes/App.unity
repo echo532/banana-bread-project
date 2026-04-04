@@ -320,6 +320,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4561322547267732209, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 552057117}
+    - target: {fileID: 4561322547267732209, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: DamageTextPrefab
       value: 
       objectReference: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
@@ -399,6 +403,10 @@ PrefabInstance:
       propertyPath: visual
       value: 
       objectReference: {fileID: 552057116}
+    - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: weaponDamage
       value: 12
