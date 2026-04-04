@@ -4,7 +4,6 @@ using System.Collections;
 
 public class PlayerCollisionHandler : MonoBehaviour
 {
-    [SerializeField] private int damagePerHit = 10;
     [SerializeField] private float damageCooldown = 0.5f; // Prevent taking damage too rapidly
     
     private HealthSystem healthSystem;
@@ -15,6 +14,11 @@ public class PlayerCollisionHandler : MonoBehaviour
     private List<GameObject> activeDamageTexts = new List<GameObject>();
     public SpriteRenderer spriteRenderer; // Assign in Inspector
     private Color originalColor;
+
+    private List<IEnemy> enemies = new List<IEnemy>();
+    private List<IWeapon> weapons = new List<IWeapon>();
+
+    private IProjectile projectile1;
     
     void Start()
     {
@@ -26,42 +30,85 @@ public class PlayerCollisionHandler : MonoBehaviour
         }
     }
     
-    void OnTriggerEnter2D(Collider2D other)
-    {  
+        private void OnTriggerEnter2D(Collider2D other)
+    {
 
-        Debug.Log("PLAYER HIT");
-        Debug.Log("Projectile hit object: " + other.name);
-        IEnemy enemy = other.GetComponentInParent<IEnemy>();
-        IWeapon weapon = other.GetComponent<IWeapon>();
         IProjectile projectile = other.GetComponent<IProjectile>();
-        
-        // Check if we hit an enemy weapon 
-        if (weapon != null)
+        if (projectile != null)
         {
-            HandleDamage(weapon.Damage);
-        } else if(enemy != null && other.CompareTag("Enemy"))
-        {
-            HandleDamage(enemy.Damage);
+            projectile1 = projectile;
         }
-        else if (projectile != null)
+        AddIfInterface<IEnemy>(other, enemies);
+        AddIfInterface<IWeapon>(other, weapons);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        RemoveIfInterface<IEnemy>(other, enemies);
+        RemoveIfInterface<IWeapon>(other, weapons);
+    }
+
+     // Helper to add interfaces if present
+    private void AddIfInterface<T>(Collider2D col, List<T> list) where T : class
+    {
+        T component = col.GetComponentInParent<T>();
+        if (component != null && !list.Contains(component))
         {
-            HandleDamage(projectile.Damage);
+            list.Add(component);
+        }
+    }
+
+    // Helper to remove interfaces
+    private void RemoveIfInterface<T>(Collider2D col, List<T> list) where T : class
+    {
+        T component = col.GetComponentInParent<T>();
+        if (component != null && list.Contains(component))
+        {
+            list.Remove(component);
+        }
+    }
+
+    
+    // --------------------
+    // Apply damage over time
+    // --------------------
+    private void Update()
+    {
+        if (Time.time - lastDamageTime < damageCooldown)
+        {
+            projectile1 = null;
+            return;
+        }
+            
+
+        if (projectile1 != null)
+        {
+            HandleDamage(projectile1.Damage);
+            projectile1 = null; // reset after applying damage
         }
 
+        int totalDamage = 0;
+
+        foreach (var weapon in weapons)
+            totalDamage += weapon.Damage;
+
+        foreach (var enemy in enemies)
+            totalDamage += enemy.Damage;
+
+        if (totalDamage > 0)
+        {
+            HandleDamage(totalDamage);
+        }
     }
 
     private void HandleDamage(int dmg)
     {
-        if (Time.time - lastDamageTime >= damageCooldown)
+        if (healthSystem != null)
         {
-            if (healthSystem != null)
-            {
-                healthSystem.TakeDamage(dmg);
-                StartCoroutine(FlashRed());
-                ShowDamageNumber(dmg, "playerhit");
-                lastDamageTime = Time.time;
-                Debug.Log($"Player hit enemy! Health reduced. Damage: {damagePerHit}");
-            }
+            healthSystem.TakeDamage(dmg);
+            StartCoroutine(FlashRed());
+            ShowDamageNumber(dmg, "playerhit");
+            lastDamageTime = Time.time;
         }
     }
 
