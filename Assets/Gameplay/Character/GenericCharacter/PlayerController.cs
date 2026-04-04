@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int weaponDamage = 8;
 
     [SerializeField] public int critChance = 50;
+    [SerializeField] public float critDmg = .5f;
 
 
     void Awake()

@@ -20,7 +20,7 @@ public class EnemyHit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        int damage = 0;
+        float damage = 0f;
 
         bool critchance = RollChance(player.critChance);
         
@@ -39,13 +39,13 @@ public class EnemyHit : MonoBehaviour
 
         if(damage > 0)
         {
-            damage = critchance ? damage * 2 : damage; // double damage on crit
+            damage = critchance ? damage * (1.0f+player.critDmg) : damage; // double damage on crit
 
-            ShowDamageNumber(damage, "fire", critchance);
+            ShowDamageNumber((int)damage, "", critchance);
 
 
 
-            currentHealth -= damage;
+            currentHealth -= (int)damage;
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
 
             if (currentHealth <= 0)

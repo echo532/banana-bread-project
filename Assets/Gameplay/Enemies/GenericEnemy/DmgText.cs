@@ -14,12 +14,15 @@ public class DamageText : MonoBehaviour
     private float maxScale;
     private float shakeDuration;
     private float shakeMagnitude;
+    public RectTransform dmgTextRect;
+
     void Awake()
     {
         text = GetComponent<TextMeshPro>();
         color = text.color;
         size = text.fontSize;
         style = text.fontStyle; //FontStyle.Normal FontStyle.Bold FontStyle.Italic FontStyle.BoldAndItalic
+        dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
     }
 
     public void SetDamage(int damage, string element, bool playerhit, bool crit)
@@ -34,6 +37,7 @@ public class DamageText : MonoBehaviour
         maxScale = 1.2f;
         shakeDuration = 0f;
         shakeMagnitude = 0f;
+        dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
 
 
         if(element == "playerhit")
@@ -51,12 +55,13 @@ public class DamageText : MonoBehaviour
             if (crit)
             {
                 moveSpeed = 1f;
-                size = 20f;
-                style = FontStyles.Bold | FontStyles.Italic;
+                size = 10f;
+                style = FontStyles.Bold;
                 popDuration = 0.3f;
                 maxScale = 2.5f;
-                shakeDuration = 0.25f;
-                shakeMagnitude = 0.15f;
+                shakeDuration = 0.1f;
+                shakeMagnitude = 0.3f;
+                dmgTextRect.pivot = new Vector2(0.5f, 0.9f);
             }
             else if(1 == 2)
             {

@@ -196,3 +196,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageText
   moveSpeed: 2
   lifetime: 1
+  dmgTextRect: {fileID: 6276182945474701228}
