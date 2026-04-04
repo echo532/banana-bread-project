@@ -5,6 +5,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider2D))]
 public class EnemyHit : MonoBehaviour
 {
+
+    [SerializeField] public PlayerController player;
     [SerializeField] private int maxHealth = 10;
     public int currentHealth;
     public GameObject DamageTextPrefab;
@@ -13,11 +15,15 @@ public class EnemyHit : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         int damage = 0;
+
+        bool critchance = RollChance(player.critChance);
+        
 
         // Check for IWeapon
         IWeapon weapon = other.GetComponent<IWeapon>();
@@ -33,7 +39,11 @@ public class EnemyHit : MonoBehaviour
 
         if(damage > 0)
         {
-            ShowDamageNumber(damage, "fire");
+            damage = critchance ? damage * 2 : damage; // double damage on crit
+
+            ShowDamageNumber(damage, "fire", critchance);
+
+
 
             currentHealth -= damage;
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
@@ -44,9 +54,13 @@ public class EnemyHit : MonoBehaviour
             }
         }
     
+        
+    }
 
-        
-        
+    public bool RollChance(int percent)
+    {
+        int roll = UnityEngine.Random.Range(0, 100); // 0–99
+        return roll < percent;
     }
 
     private void Die()
@@ -54,7 +68,7 @@ public class EnemyHit : MonoBehaviour
         // Optional: play death animation, effects, sound, etc.
         Destroy(gameObject);
     }
-    void ShowDamageNumber(int damage, string element)
+    void ShowDamageNumber(int damage, string element, bool crit)
     {
         GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
@@ -64,7 +78,7 @@ public class EnemyHit : MonoBehaviour
         dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
         // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element);
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element,false, crit);
 
         // Track active number
         activeDamageTexts.Add(dmgText);

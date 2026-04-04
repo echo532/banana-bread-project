@@ -70,7 +70,7 @@ public class PlayerCollisionHandler : MonoBehaviour
         dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
         // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element);
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element, true, false);
 
         // Track active number
         activeDamageTexts.Add(dmgText);

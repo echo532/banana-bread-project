@@ -22,20 +22,20 @@ public class DamageText : MonoBehaviour
         style = text.fontStyle; //FontStyle.Normal FontStyle.Bold FontStyle.Italic FontStyle.BoldAndItalic
     }
 
-    public void SetDamage(int damage, string element)
+    public void SetDamage(int damage, string element, bool playerhit, bool crit)
     {
         text.text = damage.ToString();
-        if(element == "fire")
-        {
-            color = Color.red;
-            moveSpeed = 0.5f;
-            size = 5f;
-            style = FontStyles.Normal;
-            popDuration = 0.1f;
-            maxScale = 1.2f;
-            shakeDuration = 0f;
-            shakeMagnitude = 0f;
-        }
+
+        //default damage values
+        color = Color.gray;
+        moveSpeed = 0.5f;
+        style = FontStyles.Normal;
+        popDuration = 0.1f;
+        maxScale = 1.2f;
+        shakeDuration = 0f;
+        shakeMagnitude = 0f;
+
+
         if(element == "playerhit")
         {
             color = Color.yellow;
@@ -46,6 +46,31 @@ public class DamageText : MonoBehaviour
             maxScale = 2.0f;
             shakeDuration = 0.15f;
             shakeMagnitude = 0.075f;
+        } else
+        {
+            if (crit)
+            {
+                moveSpeed = 1f;
+                size = 20f;
+                style = FontStyles.Bold | FontStyles.Italic;
+                popDuration = 0.3f;
+                maxScale = 2.5f;
+                shakeDuration = 0.25f;
+                shakeMagnitude = 0.15f;
+            }
+            else if(1 == 2)
+            {
+                //tick damage
+            }
+
+            if(element == "fire")
+            {
+                color = Color.red;
+            
+            } else if(element == "ice")
+            {
+                color = Color.cyan;
+            }      
         }
 
         text.color = color;

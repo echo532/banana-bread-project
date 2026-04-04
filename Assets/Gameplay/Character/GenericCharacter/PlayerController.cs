@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
     private IWeapon currentWeapon;
     [SerializeField] private int startingWeaponIndex = 0;
+    [SerializeField] private int weaponDamage = 8;
+
+    [SerializeField] public int critChance = 50;
+
 
     void Awake()
     {
@@ -25,7 +29,8 @@ public class PlayerController : MonoBehaviour
 
         weapons = GetComponentsInChildren<IWeapon>(true);
         EquipWeapon(startingWeaponIndex); // Bow
-        //EquipWeapon(1); // Sword
+
+        currentWeapon.Damage = weaponDamage;
     }
     public void EquipWeapon(int index)
     {

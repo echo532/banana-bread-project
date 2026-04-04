@@ -400,8 +400,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 552057116}
     - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: weaponDamage
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: startingWeaponIndex
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9018953235643383612, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: m_Size.x
@@ -448,6 +452,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 1.71
       objectReference: {fileID: 0}
+    - target: {fileID: 2856785299577929176, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1999022521}
     - target: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
       propertyPath: m_Name
       value: MeleeEnemy
@@ -601,6 +609,10 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 1.43
       objectReference: {fileID: 0}
+    - target: {fileID: 7028027032296701524, guid: a7f5942f44aca0148a4cf5213dabaad4, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1999022521}
     m_RemovedComponents:
     - {fileID: 3484239189350816631, guid: a7f5942f44aca0148a4cf5213dabaad4, type: 3}
     m_RemovedGameObjects: []
@@ -1176,6 +1188,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5544151371949570624, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
   m_PrefabInstance: {fileID: 649517959}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1999022521 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+  m_PrefabInstance: {fileID: 649517959}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86c1836e30466248b9769eaf20bf5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
 --- !u!1001 &4200290949505806468
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1184,6 +1207,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2856785299577929176, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1999022521}
     - target: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
       propertyPath: m_Name
       value: Enemy

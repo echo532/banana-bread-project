@@ -8,7 +8,12 @@ public class Bow : MonoBehaviour, IWeapon
 
     private int damage = 2;
 
-    public int Damage => damage;
+    public int Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
+
 
     public void Attack()
     {
@@ -21,6 +26,8 @@ public class Bow : MonoBehaviour, IWeapon
         GameObject arrowGO = Instantiate(arrowPrefab, firePoint.position, Quaternion.identity);
         
         Arrow arrow = arrowGO.GetComponent<Arrow>();
+
+        
         arrow.SetDamage(damage);
         arrow.Shoot(direction);
     }

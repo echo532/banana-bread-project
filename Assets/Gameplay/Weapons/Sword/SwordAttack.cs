@@ -20,8 +20,12 @@ public class SwordAttack : MonoBehaviour, IWeapon
 
     private int damage = 5;
 
-    public int Damage => damage;
-    
+    public int Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
+
 
     void Awake()
     {

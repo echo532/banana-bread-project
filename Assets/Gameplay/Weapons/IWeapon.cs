@@ -1,6 +1,7 @@
 public interface IWeapon
 {
-    int Damage { get; }
+    int Damage { get; set; }
+
 
     void Attack();
 }
