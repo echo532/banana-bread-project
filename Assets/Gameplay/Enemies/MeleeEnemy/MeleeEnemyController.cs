@@ -6,17 +6,10 @@ public class MeleeEnemyController : EnemyController, IWeapon
     
     private Transform playerTransform;
 
-    private int damage = 4;
-
-
-    public override int Damage
-    {
-        get => damage;
-        set => damage = value;
-    }
     
     protected override void Start()
     {
+        Damage = 5;
         MoveSpeed = 2f;
         // Find the player in the scene (assumes tag "Player")
         GameObject player = GameObject.FindGameObjectWithTag("Player");

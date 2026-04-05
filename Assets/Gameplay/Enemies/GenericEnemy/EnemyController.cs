@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour, IWeapon
     private Camera mainCamera;
     private Vector2 screenBounds;
 
-    private int damage;
+    private int damage = 2;
 
     public virtual int Damage
     {
