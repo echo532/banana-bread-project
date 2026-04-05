@@ -30,7 +30,7 @@ public class PlayerCollisionHandler : MonoBehaviour
         }
     }
     
-        private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
 
         IProjectile projectile = other.GetComponent<IProjectile>();
