@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour, IEnemy
+public class EnemyController : MonoBehaviour, IWeapon
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float directionChangeInterval = 2f;
@@ -10,7 +10,13 @@ public class EnemyController : MonoBehaviour, IEnemy
     private Camera mainCamera;
     private Vector2 screenBounds;
 
-    public virtual int Damage => 2; 
+    private int damage;
+
+    public virtual int Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
 
     public float MoveSpeed
     {

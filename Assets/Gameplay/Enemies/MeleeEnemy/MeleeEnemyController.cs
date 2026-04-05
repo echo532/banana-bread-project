@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MeleeEnemyController : EnemyController
+public class MeleeEnemyController : EnemyController, IWeapon
 {
     [SerializeField] private float stoppingDistance = 0.5f; // How close to the player it stops
     
@@ -8,7 +8,12 @@ public class MeleeEnemyController : EnemyController
 
     private int damage = 4;
 
-    public override int Damage => damage;
+
+    public override int Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
     
     protected override void Start()
     {
