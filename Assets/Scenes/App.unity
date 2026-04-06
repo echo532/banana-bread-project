@@ -1747,9 +1747,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
   damageCooldown: 0.5
-  DamageTextPrefab: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  healthsystem: {fileID: 0}
+  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
+  spriteRenderer: {fileID: 552057117}
+  healthsystem: {fileID: 1999022528}
+--- !u!114 &1999022528 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+  m_PrefabInstance: {fileID: 649517959}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96721785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f19c61595ce65459bb18cd169d5137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
 --- !u!1001 &4200290949505806468
 PrefabInstance:
   m_ObjectHideFlags: 0

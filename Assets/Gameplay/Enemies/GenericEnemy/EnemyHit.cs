@@ -12,6 +12,8 @@ public class EnemyHit : MonoBehaviour
     public GameObject DamageTextPrefab;
     public EnemyHealthbar healthBar;
     private List<GameObject> activeDamageTexts = new List<GameObject>();
+
+    private DamageHandler damageHandler;
     private void Start()
     {
         healthBar.MaxHealth = maxHealth;

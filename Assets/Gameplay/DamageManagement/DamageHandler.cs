@@ -26,6 +26,7 @@ public class DamageHandler : MonoBehaviour
     void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
+        originalColor = spriteRenderer.color; // store the original color
     }
 
     public void HandleEnter(Collider2D other)
@@ -54,7 +55,7 @@ public class DamageHandler : MonoBehaviour
 
         if (projectile != null)
         {
-            ApplyDamage(projectile.Damage);
+            HandleDamage(projectile.Damage);
             projectile = null;
         }
 
@@ -64,13 +65,7 @@ public class DamageHandler : MonoBehaviour
         foreach (var e in enemies) totalDamage += e.Damage;
 
         if (totalDamage > 0)
-            ApplyDamage(totalDamage);
-    }
-
-    void ApplyDamage(int dmg)
-    {
-        healthSystem?.TakeDamage(dmg);
-        lastDamageTime = Time.time;
+            HandleDamage(totalDamage);
     }
 
     private void AddIfInterface<T>(Collider2D col, List<T> list) where T : class
@@ -85,5 +80,47 @@ public class DamageHandler : MonoBehaviour
         var comp = col.GetComponentInParent<T>();
         if (comp != null)
             list.Remove(comp);
+    }
+
+    private void HandleDamage(int dmg)
+    {
+        healthSystem.TakeDamage(dmg);
+        StartCoroutine(FlashRed());
+        ShowDamageNumber(dmg, "playerhit");
+        lastDamageTime = Time.time;
+        
+    }
+
+    void ShowDamageNumber(int damage, string element)
+    {
+        GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
+
+        // Stack offset
+        float yOffset = activeDamageTexts.Count * Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+        float xOffset = Random.Range(-0.5f, 0.5f); // horizontal variation
+        dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
+
+        // Set damage & element
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element, true, false);
+
+        // Track active number
+        activeDamageTexts.Add(dmgText);
+
+        // Remove when lifetime ends
+        DamageText dt = dmgText.GetComponent<DamageText>();
+        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
+    }
+    IEnumerator FlashRed()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // Turn red
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.15f);
+
+            // Back to original color
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.15f);
+        }
     }
 }
