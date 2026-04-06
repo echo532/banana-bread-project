@@ -6,8 +6,9 @@ public class DamageHandler : MonoBehaviour
 {
     [SerializeField] private float damageCooldown = 0.5f;
 
+    [SerializeField] public PlayerController player;
+
     private float lastDamageTime = -999f;
-    private HealthSystem healthSystem;
 
     private List<IEnemy> enemies = new();
     private List<IWeapon> weapons = new();
@@ -19,14 +20,34 @@ public class DamageHandler : MonoBehaviour
     public SpriteRenderer spriteRenderer; // Assign in Inspector
     private Color originalColor;
 
-    [SerializeField] private MonoBehaviour healthsystem; // Can be either player or enemy health system
+    private int critChance;
 
-    private IHealth health => healthsystem as IHealth;
+    private bool isPlayer;
+
+
+
+    private IHealth healthSystem; // Can be either player or enemy health system
+
 
     void Awake()
     {
-        healthSystem = GetComponent<HealthSystem>();
+        healthSystem = GetComponentInChildren<IHealth>();
+        
+
         originalColor = spriteRenderer.color; // store the original color
+
+        if(GetComponent<PlayerController>() != null) //if this is a player
+        {
+            isPlayer = true;
+            critChance = GetComponent<PlayerController>().critChance;
+            damageCooldown = 0.5f;
+        } else //this is an enemy or some other thing (terrain, etc.)
+        {
+            isPlayer = false;
+            critChance = 0;
+            damageCooldown = 0.0f;
+        }
+
     }
 
     public void HandleEnter(Collider2D other)
@@ -66,6 +87,10 @@ public class DamageHandler : MonoBehaviour
 
         if (totalDamage > 0)
             HandleDamage(totalDamage);
+
+            
+
+        
     }
 
     private void AddIfInterface<T>(Collider2D col, List<T> list) where T : class
@@ -82,16 +107,39 @@ public class DamageHandler : MonoBehaviour
             list.Remove(comp);
     }
 
-    private void HandleDamage(int dmg)
+    private void HandleDamage(int damage)
     {
-        healthSystem.TakeDamage(dmg);
+        Debug.Log($"{gameObject.name} takes {damage} damage!");
+        if (isPlayer) //player
+        {
+            ShowDamageNumber(damage, "playerhit");
+        } else //handle enemy
+        {
+            bool crit = RollChance(critChance);
+            damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
+            ShowDamageNumber(damage, "playerhit", false, crit);
+        }
+
+        healthSystem.TakeDamage(damage);
         StartCoroutine(FlashRed());
-        ShowDamageNumber(dmg, "playerhit");
         lastDamageTime = Time.time;
+
+
+        if (healthSystem.CurrentHealth <= 0)
+        {
+            Die();
+        }
+        
         
     }
 
-    void ShowDamageNumber(int damage, string element)
+    private void Die()
+    {
+        // Optional: play death animation, effects, sound, etc.
+        Destroy(gameObject);
+    }
+
+    void ShowDamageNumber(int damage, string element, bool playerhit = false, bool crit = false)
     {
         GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
@@ -101,7 +149,7 @@ public class DamageHandler : MonoBehaviour
         dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
         // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element, true, false);
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, crit);
 
         // Track active number
         activeDamageTexts.Add(dmgText);
@@ -122,5 +170,11 @@ public class DamageHandler : MonoBehaviour
             spriteRenderer.color = originalColor;
             yield return new WaitForSeconds(0.15f);
         }
+    }
+
+    public bool RollChance(int percent)
+    {
+        int roll = UnityEngine.Random.Range(0, 100); // 0–99
+        return roll < percent;
     }
 }

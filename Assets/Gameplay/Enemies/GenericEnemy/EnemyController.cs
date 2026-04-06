@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour, IWeapon
     private Camera mainCamera;
     private Vector2 screenBounds;
 
+    [SerializeField] public int maxHealth;
+
     private int damage = 3;
 
     public virtual int Damage

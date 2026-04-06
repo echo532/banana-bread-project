@@ -20,6 +20,16 @@ public class EnemyHealthbar : MonoBehaviour, IHealth
 
     [SerializeField] private Transform fill; // the green bar or fill object
 
+    [SerializeField] private EnemyController enemy; // Reference to enemy
+
+    private void Start()
+    {
+        MaxHealth = enemy.maxHealth;
+        CurrentHealth = maxHealth;
+
+        
+    }
+
 
     public void TakeDamage(int damage)
     {

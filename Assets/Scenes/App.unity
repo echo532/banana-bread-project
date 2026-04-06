@@ -199,6 +199,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &436584557 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+  m_PrefabInstance: {fileID: 4200290949505806468}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &436584562 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6455182317999050712, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+  m_PrefabInstance: {fileID: 4200290949505806468}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &436584564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436584557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc0ea18d890943419e5125763559785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
+  damageCooldown: 0.5
+  player: {fileID: 1999022521}
+  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
+  spriteRenderer: {fileID: 436584562}
+  healthPlaceholder: {fileID: 1365827355}
 --- !u!1 &476303043
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,6 +1025,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1365827355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1695835287118226588, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+  m_PrefabInstance: {fileID: 4200290949505806468}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
 --- !u!1 &1372300489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,9 +1785,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
   damageCooldown: 0.5
+  player: {fileID: 0}
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
   spriteRenderer: {fileID: 552057117}
-  healthsystem: {fileID: 1999022528}
+  healthPlaceholder: {fileID: 1999022528}
 --- !u!114 &1999022528 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
@@ -1840,7 +1879,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5192779505810836828, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 436584564}
   m_SourcePrefab: {fileID: 100100000, guid: 5d9ab337959c9f6449a46e1fbe541d5b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
