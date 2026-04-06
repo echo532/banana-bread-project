@@ -150,6 +150,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1582737052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &96721785 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7010439502758463832, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+  m_PrefabInstance: {fileID: 649517959}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &275283643
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +400,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1999022521}
+    - target: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: healthBarFill
       value: 
       objectReference: {fileID: 476303045}
@@ -525,7 +534,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5544151371949570624, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 552057116}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7010439502758463832, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1999022527}
   m_SourcePrefab: {fileID: 100100000, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
 --- !u!1001 &696399059
 PrefabInstance:
@@ -1720,7 +1732,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
   m_PrefabInstance: {fileID: 649517959}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 96721785}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d86c1836e30466248b9769eaf20bf5c7, type: 3}
@@ -1731,12 +1743,28 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
   m_PrefabInstance: {fileID: 649517959}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 96721785}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9f19c61595ce65459bb18cd169d5137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+--- !u!114 &1999022527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96721785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc0ea18d890943419e5125763559785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
+  damageCooldown: 0.5
+  DamageTextPrefab: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  healthsystem: {fileID: 0}
 --- !u!1001 &4200290949505806468
 PrefabInstance:
   m_ObjectHideFlags: 0

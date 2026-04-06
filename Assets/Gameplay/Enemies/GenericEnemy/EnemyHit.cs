@@ -7,20 +7,21 @@ public class EnemyHit : MonoBehaviour
 {
 
     [SerializeField] public PlayerController player;
-    [SerializeField] private int maxHealth = 10;
-    public int currentHealth;
+    [SerializeField] private int maxHealth;
+    
     public GameObject DamageTextPrefab;
     public EnemyHealthbar healthBar;
     private List<GameObject> activeDamageTexts = new List<GameObject>();
     private void Start()
     {
-        currentHealth = maxHealth;
+        healthBar.MaxHealth = maxHealth;
+        healthBar.CurrentHealth = maxHealth;
         
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        float damage = 0f;
+        int damage = 0;
 
         bool critchance = RollChance(player.critChance);
         
@@ -39,16 +40,15 @@ public class EnemyHit : MonoBehaviour
 
         if(damage > 0)
         {
-            damage = critchance ? damage * (1.0f+player.critDmg) : damage; // double damage on crit
+            damage = (int)(critchance ? damage * (1.0f+player.critDmg) : damage); // double damage on crit
 
-            ShowDamageNumber((int)damage, "", critchance);
+            ShowDamageNumber(damage, "", critchance);
 
 
 
-            currentHealth -= (int)damage;
-            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+            healthBar.TakeDamage(damage);
 
-            if (currentHealth <= 0)
+            if (healthBar.CurrentHealth <= 0)
             {
                 Die();
             }

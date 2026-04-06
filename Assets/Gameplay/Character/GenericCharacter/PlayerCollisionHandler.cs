@@ -19,6 +19,8 @@ public class PlayerCollisionHandler : MonoBehaviour
     private List<IWeapon> weapons = new List<IWeapon>();
 
     private IProjectile projectile1;
+
+    private DamageHandler damageHandler;
     
     void Start()
     {
@@ -103,13 +105,11 @@ public class PlayerCollisionHandler : MonoBehaviour
 
     private void HandleDamage(int dmg)
     {
-        if (healthSystem != null)
-        {
-            healthSystem.TakeDamage(dmg);
-            StartCoroutine(FlashRed());
-            ShowDamageNumber(dmg, "playerhit");
-            lastDamageTime = Time.time;
-        }
+        healthSystem.TakeDamage(dmg);
+        StartCoroutine(FlashRed());
+        ShowDamageNumber(dmg, "playerhit");
+        lastDamageTime = Time.time;
+        
     }
 
     void ShowDamageNumber(int damage, string element)

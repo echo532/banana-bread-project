@@ -16,10 +16,12 @@ public class PlayerController : MonoBehaviour
 
     private IWeapon currentWeapon;
     [SerializeField] private int startingWeaponIndex = 0;
-    [SerializeField] private int weaponDamage = 8;
+    [SerializeField] private int weaponDamage = 1;
 
     [SerializeField] public int critChance = 50;
     [SerializeField] public float critDmg = .5f;
+
+    [SerializeField] public int maxHealth = 100;
 
 
     void Awake()
