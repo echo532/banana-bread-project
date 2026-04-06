@@ -40,7 +40,7 @@ public class DamageText : MonoBehaviour
         dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
 
 
-        if(element == "playerhit")
+        if(playerhit)
         {
             color = Color.yellow;
             moveSpeed = 0.8f;

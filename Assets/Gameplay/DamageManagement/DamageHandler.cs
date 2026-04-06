@@ -12,6 +12,8 @@ public class DamageHandler : MonoBehaviour
 
     private List<IEnemy> enemies = new();
     private List<IWeapon> weapons = new();
+
+    private List<IWeapon> tickDamage = new();
     private IProjectile projectile;
 
     public GameObject DamageTextPrefab;
@@ -47,6 +49,8 @@ public class DamageHandler : MonoBehaviour
             critChance = 0;
             damageCooldown = 0.0f;
         }
+
+        Debug.Log("Player: " + isPlayer);
 
     }
 
@@ -112,12 +116,12 @@ public class DamageHandler : MonoBehaviour
         Debug.Log($"{gameObject.name} takes {damage} damage!");
         if (isPlayer) //player
         {
-            ShowDamageNumber(damage, "playerhit");
+            ShowDamageNumber(damage, "fire", true);
         } else //handle enemy
         {
-            bool crit = RollChance(critChance);
+            bool crit = RollChance(player.critChance);
             damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
-            ShowDamageNumber(damage, "playerhit", false, crit);
+            ShowDamageNumber(damage, "fire", false, crit);
         }
 
         healthSystem.TakeDamage(damage);
