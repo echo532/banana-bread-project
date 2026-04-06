@@ -184,10 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96116e5c07702a4b9bf6b585437e06e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  canvas: {fileID: 0}
-  healthBarBackground: {fileID: 0}
-  healthBarFill: {fileID: 0}
-  playerHealth: {fileID: 1999022523}
 --- !u!4 &275283645
 Transform:
   m_ObjectHideFlags: 0
@@ -1738,17 +1734,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86c1836e30466248b9769eaf20bf5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
---- !u!114 &1999022523 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3430912285737438619, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
-  m_PrefabInstance: {fileID: 649517959}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 96721785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9f19c61595ce65459bb18cd169d5137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
 --- !u!114 &1999022527
 MonoBehaviour:
   m_ObjectHideFlags: 0

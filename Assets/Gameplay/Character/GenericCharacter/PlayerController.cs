@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private IWeapon currentWeapon;
     [SerializeField] private int startingWeaponIndex = 0;
-    [SerializeField] private int weaponDamage = 1;
+    // [SerializeField] private int weaponDamage = 60;
 
     [SerializeField] public int critChance = 50;
     [SerializeField] public float critDmg = .5f;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         weapons = GetComponentsInChildren<IWeapon>(true);
         EquipWeapon(startingWeaponIndex); // Bow
 
-        currentWeapon.Damage = weaponDamage;
+        //currentWeapon.Damage = weaponDamage;
     }
     public void EquipWeapon(int index)
     {
