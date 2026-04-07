@@ -4,8 +4,6 @@ using System.Collections;
 
 public class PlayerCollisionHandler : MonoBehaviour
 {
-    [SerializeField] private float damageCooldown = 0.5f; // Prevent taking damage too rapidly
-    
     private HealthSystem healthSystem;
 
     public GameObject DamageTextPrefab;

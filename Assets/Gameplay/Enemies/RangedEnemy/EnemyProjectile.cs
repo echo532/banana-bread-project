@@ -35,29 +35,7 @@ public class EnemyProjectile : MonoBehaviour, IProjectile
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerCollisionHandler player = collision.GetComponentInParent<PlayerCollisionHandler>();
-
-         Debug.Log("Projectile hit object: " + collision.name);
-
-        // Print all components on the object we hit
-        Component[] comps = collision.GetComponents<Component>();
-        foreach (var comp in comps)
-        {
-            Debug.Log("Component on hit object: " + comp.GetType().Name);
-        }
-
-        // Also print the parent objects in case the component is higher up
-        Transform current = collision.transform.parent;
-        while (current != null)
-        {
-            Debug.Log("Parent object: " + current.name);
-            Component[] parentComps = current.GetComponents<Component>();
-            foreach (var comp in parentComps)
-            {
-                Debug.Log("Component on parent: " + comp.GetType().Name);
-            }
-            current = current.parent;
-        }
+        PlayerController player = collision.GetComponent<PlayerController>();
         if (player != null)
         {
             Destroy(this.gameObject); // destroy projectile on hit

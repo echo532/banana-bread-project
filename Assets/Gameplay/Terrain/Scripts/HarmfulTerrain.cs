@@ -6,10 +6,21 @@ public class Terrain : MonoBehaviour, ITickDmg
 {
     [SerializeField] private int damagePerTick = 5;
 
-    [SerializeField] private int time = 1; // Duration of damage in seconds
+    [SerializeField] private int duration = 1; // Duration of damage in seconds
+
+    private DamageHandler damageHandler;
 
     public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
-    public int Time { get => time; set => time = value; }
+    public int Duration { get => duration; set => duration = value; }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("Player entered harmful terrain");
+        damageHandler?.HandleEnter(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        damageHandler?.HandleExit(collision);
+    }
 }

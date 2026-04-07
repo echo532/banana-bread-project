@@ -25,7 +25,7 @@ public class DamageText : MonoBehaviour
         dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
     }
 
-    public void SetDamage(int damage, string element, bool playerhit, bool crit)
+    public void SetDamage(int damage, string element, bool playerhit, string type)
     {
         text.text = damage.ToString();
 
@@ -52,33 +52,40 @@ public class DamageText : MonoBehaviour
             shakeMagnitude = 0.075f;
             dmgTextRect.pivot = new Vector2(0.5f, 0.8f);
 
-        } else
-        {
-            if (crit)
-            {
-                moveSpeed = 1f;
-                size = 10f;
-                style = FontStyles.Bold;
-                popDuration = 0.3f;
-                maxScale = 2.5f;
-                shakeDuration = 0.1f;
-                shakeMagnitude = 0.3f;
-                dmgTextRect.pivot = new Vector2(0.5f, 0.9f);
-            }
-            else if(1 == 2)
-            {
-                //tick damage
-            }
+        } 
 
-            if(element == "fire")
-            {
-                color = Color.red;
-            
-            } else if(element == "ice")
-            {
-                color = Color.cyan;
-            }      
+        if (type == "crit")
+        {
+            moveSpeed = 1f;
+            size = 10f;
+            style = FontStyles.Bold;
+            popDuration = 0.3f;
+            maxScale = 2.5f;
+            shakeDuration = 0.1f;
+            shakeMagnitude = 0.3f;
+            dmgTextRect.pivot = new Vector2(0.5f, 0.9f);
         }
+        else if(type == "tick")
+        {
+            moveSpeed = 0.5f;
+            style = FontStyles.Normal;
+            popDuration = 0.1f;
+            size = 5f;
+            maxScale = 0.6f;
+            shakeDuration = 0f;
+            shakeMagnitude = 0f;
+            dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
+        }
+
+        if(element == "fire")
+        {
+            color = Color.red;
+        
+        } else if(element == "ice")
+        {
+            color = Color.cyan;
+        }      
+        
 
         text.color = color;
         text.fontSize = size;

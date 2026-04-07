@@ -13,7 +13,8 @@ public class DamageHandler : MonoBehaviour
     private List<IEnemy> enemies = new();
     private List<IWeapon> weapons = new();
 
-    private List<IWeapon> tickDamage = new();
+    private List<ITickDmg> tickDamage = new();
+    private List<ActiveTickEffect> activeTickDamage = new();
     private IProjectile projectile;
 
     public GameObject DamageTextPrefab;
@@ -25,6 +26,9 @@ public class DamageHandler : MonoBehaviour
     private int critChance;
 
     private bool isPlayer;
+
+    //tick
+    private float tickInterval = 1f; // once per second
 
 
 
@@ -62,23 +66,51 @@ public class DamageHandler : MonoBehaviour
 
         AddIfInterface<IEnemy>(other, enemies);
         AddIfInterface<IWeapon>(other, weapons);
+
+        //
+        AddIfInterface<ITickDmg>(other, tickDamage);
+        
     }
 
     public void HandleExit(Collider2D other)
     {
         RemoveIfInterface<IEnemy>(other, enemies);
         RemoveIfInterface<IWeapon>(other, weapons);
+        RemoveIfInterface<ITickDmg>(other, tickDamage);
     }
 
     void Update()
     {
-        if (Time.time - lastDamageTime < damageCooldown)
-        {
-            projectile = null;
-            return;
+        foreach (var i in tickDamage){
+            ApplyTickDamage(i.DamagePerTick, i.Duration);
         }
 
-        if (projectile != null)
+        for (int i = activeTickDamage.Count - 1; i >= 0; i--)
+        {
+            var tick = activeTickDamage[i];
+
+            tick.tickTimer += Time.deltaTime;
+            tick.durationTimer += Time.deltaTime;
+
+            // Apply tick damage
+            if (tick.tickTimer >= 1f)
+            {
+                HandleDamage(tick.DamagePerTick, "tick"); // ✅ ignores cooldown
+                Debug.Log("Applying tick damage: " + tick.DamagePerTick);
+                tick.tickTimer = 0f;
+            }
+
+            // Remove expired effects
+            if (tick.durationTimer >= tick.Duration)
+            {
+                activeTickDamage.RemoveAt(i);
+            }
+        }
+
+
+        bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
+
+        if (projectile != null && canTakeDamage)
         {
             HandleDamage(projectile.Damage);
             projectile = null;
@@ -86,15 +118,15 @@ public class DamageHandler : MonoBehaviour
 
         int totalDamage = 0;
 
-        foreach (var w in weapons) totalDamage += w.Damage;
-        foreach (var e in enemies) totalDamage += e.Damage;
+        if (canTakeDamage)
+        {
+            foreach (var w in weapons) totalDamage += w.Damage;
+            foreach (var e in enemies) totalDamage += e.Damage;
 
-        if (totalDamage > 0)
-            HandleDamage(totalDamage);
+            if (totalDamage > 0)
+                HandleDamage(totalDamage);
+        }
 
-            
-
-        
     }
 
     private void AddIfInterface<T>(Collider2D col, List<T> list) where T : class
@@ -111,17 +143,36 @@ public class DamageHandler : MonoBehaviour
             list.Remove(comp);
     }
 
-    private void HandleDamage(int damage)
+    private void HandleDamage(int damage, string type="normal") //should probs work on this
     {
-        Debug.Log($"{gameObject.name} takes {damage} damage!");
         if (isPlayer) //player
         {
-            ShowDamageNumber(damage, "fire", true);
+            if(type == "tick")
+            {
+                ShowDamageNumber(damage, "", true, "tick");
+            }
+            else
+            {
+                ShowDamageNumber(damage, "", true);
+            }
+            
         } else //handle enemy
         {
-            bool crit = RollChance(player.critChance);
-            damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
-            ShowDamageNumber(damage, "fire", false, crit);
+            
+            if (type == "tick")
+            {
+               ShowDamageNumber(damage, "normal", false, type); //handles normal and tick damage types for enemies
+            }
+            else
+            {
+                bool crit = RollChance(player.critChance);
+                damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
+                if (crit)
+                    ShowDamageNumber(damage, "normal", false, "crit");
+                else
+                    ShowDamageNumber(damage, "normal", false);
+            }
+            
         }
 
         healthSystem.TakeDamage(damage);
@@ -143,7 +194,7 @@ public class DamageHandler : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void ShowDamageNumber(int damage, string element, bool playerhit = false, bool crit = false)
+    void ShowDamageNumber(int damage, string element, bool playerhit = false, string type = "normal")
     {
         GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
@@ -153,7 +204,7 @@ public class DamageHandler : MonoBehaviour
         dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
         // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, crit);
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, type);
 
         // Track active number
         activeDamageTexts.Add(dmgText);
@@ -181,4 +232,37 @@ public class DamageHandler : MonoBehaviour
         int roll = UnityEngine.Random.Range(0, 100); // 0–99
         return roll < percent;
     }
+
+
+    class ActiveTickEffect : ITickDmg
+    {
+        public int DamagePerTick { get; set; }
+        public int Duration { get; set; }
+
+        public float tickTimer;
+        public float durationTimer;
+    }
+
+    public void ApplyTickDamage(int damage, int duration)
+{
+    // Check if same effect already exists (prevent duplicates)
+    var existing = activeTickDamage.Find(t => t.DamagePerTick == damage);
+
+    if (existing != null)
+    {
+        // Refresh duration
+        existing.durationTimer = 0f;
+    }
+    else
+    {
+        activeTickDamage.Add(new ActiveTickEffect
+        {
+            DamagePerTick = damage,
+            Duration = duration - 1, // Subtract 1 second to account for immediate application
+            tickTimer = 0f,
+            durationTimer = 0f
+        });
+        HandleDamage(damage, "tick"); // Apply initial tick damage immediately
+    }
+}
 }

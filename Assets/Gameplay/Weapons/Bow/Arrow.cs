@@ -39,8 +39,6 @@ public class Arrow : MonoBehaviour, IProjectile
         {
             Destroy(gameObject); // destroy arrow
         }
-
-        
     }
 
     void Update()
