@@ -593,6 +593,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7010439502758463832, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1999022527}
+    - targetCorrespondingSourceObject: {fileID: 7010439502758463832, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1999022532}
   m_SourcePrefab: {fileID: 100100000, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
 --- !u!1001 &696399059
 PrefabInstance:
@@ -1871,6 +1874,25 @@ MonoBehaviour:
   player: {fileID: 0}
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
   spriteRenderer: {fileID: 552057117}
+--- !u!114 &1999022532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96721785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f924dd4606aeaf44eab5156a2ae16eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportAbility
+  cooldown: 1
+  distance: 4
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  visual: {fileID: 0}
+  poofEffect: {fileID: 4288328069100891178, guid: 2be81fa36d870204c84fe869ff9e5b3f, type: 3}
 --- !u!1 &2132643056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5828007380593289671, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}

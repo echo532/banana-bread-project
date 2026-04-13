@@ -7,11 +7,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Movement speed in units/second")]
     public float moveSpeed = 5f;
 
+    private Ability[] abilities;
     private Rigidbody2D rb;
 
     [SerializeField] public Transform visual;
     private Vector2 movement;
-
+    public Vector2 Movement => movement;
     private IWeapon[] weapons;
 
     private IWeapon currentWeapon;
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
         EquipWeapon(startingWeaponIndex); // Bow
 
         //currentWeapon.Damage = weaponDamage;
+
+        abilities = GetComponents<Ability>();
     }
     public void EquipWeapon(int index)
     {
@@ -96,7 +99,11 @@ public class PlayerController : MonoBehaviour
             // Trigger attack
             currentWeapon.Attack();
         }
-
+        // --- Ability input ---
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            ActivateAbility<TeleportAbility>();
+        }
 
 
     }
@@ -105,4 +112,15 @@ public class PlayerController : MonoBehaviour
     {
         rb.linearVelocity = movement * moveSpeed;
     }
+    void ActivateAbility<T>() where T : Ability
+    {
+        foreach (var ability in abilities)
+        {
+         if (ability is T)
+            {
+                ability.TryActivate();
+                return;
+            }
+        }
+}
 }

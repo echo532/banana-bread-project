@@ -215,7 +215,7 @@ public class DamageHandler : MonoBehaviour
     }
     IEnumerator FlashRed()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 1; i++)
         {
             // Turn red
             spriteRenderer.color = Color.red;
