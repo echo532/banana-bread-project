@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 149964031}
   - component: {fileID: 149964033}
   - component: {fileID: 149964032}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: CooldownText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 178555011}
   - component: {fileID: 178555014}
   - component: {fileID: 178555013}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   m_Component:
   - component: {fileID: 245756507}
   - component: {fileID: 245756508}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: TeleportIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -392,7 +392,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245756506}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -12959.997}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.4399997, y: 0.28799996, z: 143.99997}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -403,7 +403,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1102.9999, y: -561.99994}
+  m_AnchoredPosition: {x: 437, y: -188}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &245756508
@@ -681,7 +681,7 @@ GameObject:
   - component: {fileID: 578204977}
   - component: {fileID: 578204980}
   - component: {fileID: 578204979}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: TeleportCooldownIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
