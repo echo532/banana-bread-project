@@ -15,7 +15,7 @@ public class DamageHandler : MonoBehaviour
 
     private List<ITickDmg> tickDamage = new();
     private List<ActiveTickEffect> activeTickDamage = new();
-    private IProjectile projectile;
+    private List<IProjectile> projectiles = new();
 
     public GameObject DamageTextPrefab;
 
@@ -60,9 +60,7 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleEnter(Collider2D other)
     {
-        IProjectile proj = other.GetComponent<IProjectile>();
-        if (proj != null)
-            projectile = proj;
+        AddIfInterface<IProjectile>(other, projectiles);
 
         AddIfInterface<IEnemy>(other, enemies);
         AddIfInterface<IWeapon>(other, weapons);
@@ -110,16 +108,12 @@ public class DamageHandler : MonoBehaviour
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
 
-        if (projectile != null && canTakeDamage)
-        {
-            HandleDamage(projectile.Damage);
-            projectile = null;
-        }
-
         int totalDamage = 0;
 
         if (canTakeDamage)
         {
+            foreach (var w in projectiles) totalDamage += w.Damage;
+            projectiles.Clear(); // assume projectile is consumed on hit
             foreach (var w in weapons) totalDamage += w.Damage;
             foreach (var e in enemies) totalDamage += e.Damage;
 

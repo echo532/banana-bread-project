@@ -10,10 +10,13 @@ public class TeleportAbility : Ability
     [SerializeField] private GameObject poofEffect;
     private Rigidbody2D rb;
 
+    private Collider2D col;
+
     void Awake()
     {
         playerController = GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
 
         if (visual == null)
         {
@@ -26,6 +29,8 @@ public class TeleportAbility : Ability
     {
         if (visual != null)
             visual.gameObject.SetActive(visible);
+        if (col != null)
+            col.enabled = visible;
     }
     protected override void Activate()
     {
