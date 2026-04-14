@@ -51,9 +51,6 @@ public class DamageHandler : MonoBehaviour
             critChance = 0;
             damageCooldown = 0.0f;
         }
-
-        Debug.Log("Player: " + isPlayer);
-
     }
 
     public void HandleEnter(Collider2D other)
@@ -87,7 +84,6 @@ public class DamageHandler : MonoBehaviour
             if (tick.tickTimer >= 1f)
             {
                 HandleDamage(tick.DamagePerTick, "tick"); // ✅ ignores cooldown
-                Debug.Log("Applying tick damage: " + tick.DamagePerTick);
                 tick.tickTimer = 0f;
             }
 
@@ -108,7 +104,7 @@ public class DamageHandler : MonoBehaviour
             foreach (var w in projectiles) totalDamage += w.Damage;
             projectiles.Clear(); // assume projectile is consumed on hit
             foreach (var w in damageDealers) totalDamage += w.Damage;
-
+            damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
             if (totalDamage > 0)
                 HandleDamage(totalDamage);
         }

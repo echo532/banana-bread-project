@@ -17,10 +17,6 @@ public class MeleeEnemyController : EnemyController, IDamageDealer
         {
             playerTransform = player.transform;
         }
-        else
-        {
-            Debug.LogWarning("Player not found in scene. Make sure it has the 'Player' tag.");
-        }
     }
     
     void Update()

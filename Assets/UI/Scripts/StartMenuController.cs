@@ -22,7 +22,6 @@ public class StartMenuController : MonoBehaviour
     // -------------------------
     public void ShowCharacterSelect()
     {
-        Debug.Log("Switching to character select");
         mainMenuPanel.SetActive(false);
         characterSelectPanel.SetActive(true);
     }
@@ -34,18 +33,14 @@ public class StartMenuController : MonoBehaviour
     private void SelectCharacter(int index)
     {
         selectedCharacter = index;
-        Debug.Log("Selected Character: " + index);
     }
 
     public void StartGame()
     {
         if (selectedCharacter == -1)
         {
-            Debug.LogWarning("No character selected!");
             return;
         }
-
-        Debug.Log("Starting game with character " + selectedCharacter);
 
         // Replace this with your actual gameplay scene
         SceneManager.LoadScene("App");

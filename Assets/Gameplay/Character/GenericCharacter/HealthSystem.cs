@@ -39,7 +39,6 @@ public class HealthSystem : MonoBehaviour, IHealth
         currentHealth -= damage;
         currentHealth = Mathf.Max(0, currentHealth); // Don't go below 0
 
-        Debug.Log("Current Health: " + currentHealth);
 
         
         
@@ -55,7 +54,6 @@ public class HealthSystem : MonoBehaviour, IHealth
     
     void Die()
     {
-        Debug.Log("Player died!");
         // You can add game over logic here
     }
 

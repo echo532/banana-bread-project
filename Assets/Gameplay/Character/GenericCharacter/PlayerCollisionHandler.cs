@@ -15,10 +15,6 @@ public class PlayerCollisionHandler : MonoBehaviour
     void Start()
     {
         healthSystem = GetComponent<HealthSystem>();
-        if (healthSystem == null)
-        {
-            Debug.LogError("PlayerCollisionHandler requires HealthSystem component!");
-        }
 
         damageHandler = GetComponent<DamageHandler>();
     }

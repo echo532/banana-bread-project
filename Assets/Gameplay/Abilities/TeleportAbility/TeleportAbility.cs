@@ -101,10 +101,8 @@ public class TeleportAbility : Ability
 
     void SpawnHitbox(Vector2 position)
     {
-        Debug.Log("Spawning hitbox at " + position);
         if (damageHitboxPrefab == null) return;
 
-        Debug.Log("Instantiating hitbox prefab");
         GameObject hitbox = Instantiate(damageHitboxPrefab, position, Quaternion.identity);
 
         // Optional: scale to match desired radius

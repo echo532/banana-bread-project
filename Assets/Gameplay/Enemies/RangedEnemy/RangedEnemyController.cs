@@ -16,8 +16,6 @@ public class RangedEnemyController : EnemyController
          GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
             playerTransform = player.transform;
-        else
-            Debug.LogWarning("Player not found!");
 
         }
 

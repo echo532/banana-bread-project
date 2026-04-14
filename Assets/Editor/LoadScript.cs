@@ -27,7 +27,6 @@ public static class LoadScript
         PlayerController player = GameObject.FindFirstObjectByType<PlayerController>();
         if (player == null)
         {
-            Debug.LogWarning("No PlayerController found in the scene.");
             return;
         }
 
@@ -36,7 +35,6 @@ public static class LoadScript
 
         // Mark the scene dirty so it saves the change
         EditorSceneManager.MarkSceneDirty(player.gameObject.scene);
-        Debug.Log("Starting weapon set to index 0");
     }
 
 }

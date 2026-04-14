@@ -403,7 +403,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 437, y: -188}
+  m_AnchoredPosition: {x: 719, y: -422}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &245756508
@@ -1151,7 +1151,7 @@ GameObject:
   - component: {fileID: 1094159194}
   - component: {fileID: 1094159193}
   - component: {fileID: 1094159197}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: lava-pool_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1376,12 +1376,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -2213,7 +2213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
   damageCooldown: 0.5
-  player: {fileID: 0}
+  player: {fileID: 1999022521}
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
   spriteRenderer: {fileID: 552057117}
 --- !u!114 &1999022532
@@ -2235,6 +2235,8 @@ MonoBehaviour:
     m_Bits: 0
   visual: {fileID: 0}
   poofEffect: {fileID: 4288328069100891178, guid: 2be81fa36d870204c84fe869ff9e5b3f, type: 3}
+  damageHitboxPrefab: {fileID: 4304354600928797993, guid: b7fd8c6e2f0e114499c6b8ab1d4d638b, type: 3}
+  hitboxRadius: 1
 --- !u!1 &2132643056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5828007380593289671, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}

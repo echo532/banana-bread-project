@@ -13,9 +13,15 @@ public class Terrain : MonoBehaviour, ITickDmg
     public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
     public int Duration { get => duration; set => duration = value; }
 
+    private void Start()
+    {
+
+        damageHandler = GetComponent<DamageHandler>();
+        
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Player entered harmful terrain");
         damageHandler?.HandleEnter(collision);
     }
 
