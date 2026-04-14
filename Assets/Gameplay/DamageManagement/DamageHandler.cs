@@ -9,9 +9,7 @@ public class DamageHandler : MonoBehaviour
     [SerializeField] public PlayerController player;
 
     private float lastDamageTime = -999f;
-
-    private List<IEnemy> enemies = new();
-    private List<IWeapon> weapons = new();
+    private List<IDamageDealer> damageDealers = new();
 
     private List<ITickDmg> tickDamage = new();
     private List<ActiveTickEffect> activeTickDamage = new();
@@ -61,19 +59,14 @@ public class DamageHandler : MonoBehaviour
     public void HandleEnter(Collider2D other)
     {
         AddIfInterface<IProjectile>(other, projectiles);
-
-        AddIfInterface<IEnemy>(other, enemies);
-        AddIfInterface<IWeapon>(other, weapons);
-
-        //
+        AddIfInterface<IDamageDealer>(other, damageDealers);
         AddIfInterface<ITickDmg>(other, tickDamage);
         
     }
 
     public void HandleExit(Collider2D other)
     {
-        RemoveIfInterface<IEnemy>(other, enemies);
-        RemoveIfInterface<IWeapon>(other, weapons);
+        RemoveIfInterface<IDamageDealer>(other, damageDealers);
         RemoveIfInterface<ITickDmg>(other, tickDamage);
     }
 
@@ -114,8 +107,7 @@ public class DamageHandler : MonoBehaviour
         {
             foreach (var w in projectiles) totalDamage += w.Damage;
             projectiles.Clear(); // assume projectile is consumed on hit
-            foreach (var w in weapons) totalDamage += w.Damage;
-            foreach (var e in enemies) totalDamage += e.Damage;
+            foreach (var w in damageDealers) totalDamage += w.Damage;
 
             if (totalDamage > 0)
                 HandleDamage(totalDamage);

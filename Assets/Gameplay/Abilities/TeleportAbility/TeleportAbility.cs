@@ -8,6 +8,9 @@ public class TeleportAbility : Ability
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private Transform visual;
     [SerializeField] private GameObject poofEffect;
+
+    [SerializeField] private GameObject damageHitboxPrefab;
+    [SerializeField] private float hitboxRadius = 1f;
     private Rigidbody2D rb;
 
     private Collider2D col;
@@ -65,6 +68,8 @@ public class TeleportAbility : Ability
         // 👻 DISAPPEAR
         SetVisible(false);
 
+        SpawnHitbox(start);
+
         // optional: stop movement
         rb.linearVelocity = Vector2.zero;
 
@@ -90,5 +95,19 @@ public class TeleportAbility : Ability
 
         // 👀 REAPPEAR
         SetVisible(true);
+
+        SpawnHitbox(target);
+    }
+
+    void SpawnHitbox(Vector2 position)
+    {
+        Debug.Log("Spawning hitbox at " + position);
+        if (damageHitboxPrefab == null) return;
+
+        Debug.Log("Instantiating hitbox prefab");
+        GameObject hitbox = Instantiate(damageHitboxPrefab, position, Quaternion.identity);
+
+        // Optional: scale to match desired radius
+        hitbox.transform.localScale = Vector3.one * hitboxRadius;
     }
 }

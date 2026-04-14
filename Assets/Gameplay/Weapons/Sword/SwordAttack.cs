@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PolygonCollider2D), typeof(SpriteRenderer))]
-public class SwordAttack : MonoBehaviour, IWeapon
+public class SwordAttack : MonoBehaviour, IWeapon, IDamageDealer
 {
     [Tooltip("Duration of sword swing in seconds")]
     public float swingDuration = 0.5f;
