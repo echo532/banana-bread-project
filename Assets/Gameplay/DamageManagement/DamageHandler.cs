@@ -9,11 +9,11 @@ public class DamageHandler : MonoBehaviour
     [SerializeField] public PlayerController player;
 
     private float lastDamageTime = -999f;
-    private List<IDamageDealer> damageDealers = new();
+    private List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
 
-    private List<ITickDmg> tickDamage = new();
+    private List<(ITickDmg tick, int sourceId)> tickDamage = new();
     private List<ActiveTickEffect> activeTickDamage = new();
-    private List<IProjectile> projectiles = new();
+    private List<(IProjectile projectile, int sourceId)> projectiles = new();
 
     public GameObject DamageTextPrefab;
 
@@ -55,14 +55,16 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleEnter(Collider2D other)
     {
-        AddIfInterface<IProjectile>(other, projectiles);
-        AddIfInterface<IDamageDealer>(other, damageDealers);
-        AddIfInterface<ITickDmg>(other, tickDamage);
+        
+        AddIfInterface<IProjectile, int>(other, other.gameObject.GetInstanceID(), projectiles);
+        AddIfInterface<IDamageDealer, int>(other, other.gameObject.GetInstanceID(), damageDealers);
+        AddIfInterface<ITickDmg, int>(other, other.gameObject.GetInstanceID(), tickDamage);
         
     }
 
     public void HandleExit(Collider2D other)
     {
+        Debug.Log("HandleExit called for: " + other.gameObject.name);
         RemoveIfInterface<IDamageDealer>(other, damageDealers);
         RemoveIfInterface<ITickDmg>(other, tickDamage);
     }
@@ -70,7 +72,7 @@ public class DamageHandler : MonoBehaviour
     void Update()
     {
         foreach (var i in tickDamage){
-            ApplyTickDamage(i.DamagePerTick, i.Duration);
+            ApplyTickDamage(i.tick.DamagePerTick, i.tick.Duration, i.sourceId);
         }
 
         for (int i = activeTickDamage.Count - 1; i >= 0; i--)
@@ -79,6 +81,7 @@ public class DamageHandler : MonoBehaviour
 
             tick.tickTimer += Time.deltaTime;
             tick.durationTimer += Time.deltaTime;
+            //Debug.Log(tick.durationTimer);
 
             // Apply tick damage
             if (tick.tickTimer >= 1f)
@@ -101,9 +104,9 @@ public class DamageHandler : MonoBehaviour
 
         if (canTakeDamage)
         {
-            foreach (var w in projectiles) totalDamage += w.Damage;
+            foreach (var w in projectiles) totalDamage += w.projectile.Damage;
             projectiles.Clear(); // assume projectile is consumed on hit
-            foreach (var w in damageDealers) totalDamage += w.Damage;
+            foreach (var w in damageDealers) totalDamage += w.dealer.Damage;
             damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
             if (totalDamage > 0)
                 HandleDamage(totalDamage);
@@ -111,18 +114,18 @@ public class DamageHandler : MonoBehaviour
 
     }
 
-    private void AddIfInterface<T>(Collider2D col, List<T> list) where T : class
+    private void AddIfInterface<T, Integer>(Collider2D col, int sourceId, List<(T, int)> list) where T : class
     {
         var comp = col.GetComponentInParent<T>();
-        if (comp != null && !list.Contains(comp))
-            list.Add(comp);
+        if (comp != null && !list.Contains((comp, sourceId)))
+            list.Add((comp, sourceId));
     }
 
-    private void RemoveIfInterface<T>(Collider2D col, List<T> list) where T : class
+    private void RemoveIfInterface<T>(Collider2D col, List<(T, int)> list) where T : class
     {
         var comp = col.GetComponentInParent<T>();
         if (comp != null)
-            list.Remove(comp);
+            list.RemoveAll(item => item.Item1 == comp);
     }
 
     private void HandleDamage(int damage, string type="normal") //should probs work on this
@@ -220,31 +223,33 @@ public class DamageHandler : MonoBehaviour
     {
         public int DamagePerTick { get; set; }
         public int Duration { get; set; }
+        public int SourceId { get; set; }
 
         public float tickTimer;
         public float durationTimer;
     }
 
-    public void ApplyTickDamage(int damage, int duration)
-{
-    // Check if same effect already exists (prevent duplicates)
-    var existing = activeTickDamage.Find(t => t.DamagePerTick == damage);
+    public void ApplyTickDamage(int damage, int duration, int sourceID)
+    {
+        // Check if same effect already exists (prevent duplicates)
+        var existing = activeTickDamage.Find(t => t.SourceId == sourceID);
 
-    if (existing != null)
-    {
-        // Refresh duration
-        existing.durationTimer = 0f;
-    }
-    else
-    {
-        activeTickDamage.Add(new ActiveTickEffect
+        if (existing != null)
         {
-            DamagePerTick = damage,
-            Duration = duration - 1, // Subtract 1 second to account for immediate application
-            tickTimer = 0f,
-            durationTimer = 0f
-        });
-        HandleDamage(damage, "tick"); // Apply initial tick damage immediately
+            // Refresh duration
+            //existing.durationTimer = 0f;
+        }
+        else
+        {
+            activeTickDamage.Add(new ActiveTickEffect
+            {
+                DamagePerTick = damage,
+                Duration = duration, // Subtract 1 second to account for immediate application
+                tickTimer = 0f,
+                durationTimer = 0f,
+                SourceId = sourceID
+            });
+            HandleDamage(damage, "tick"); // Apply initial tick damage immediately
+        }
     }
-}
 }
