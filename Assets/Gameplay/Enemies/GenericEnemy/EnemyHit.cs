@@ -6,15 +6,17 @@ using System.Collections.Generic;
 public class EnemyHit : MonoBehaviour
 {
 
-    [SerializeField] public PlayerController player;
+    private PlayerController player;
     
     
     public GameObject DamageTextPrefab;
-    public EnemyHealthbar healthBar;
+    private EnemyHealthbar healthBar;
 
     private DamageHandler damageHandler;
     private void Start()
     {
+
+        player = GetComponent<PlayerController>();
         healthBar = GetComponent<EnemyHealthbar>();
 
         damageHandler = GetComponent<DamageHandler>();

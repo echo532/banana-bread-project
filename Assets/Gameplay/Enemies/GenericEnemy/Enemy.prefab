@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthbar
   fill: {fileID: 2570385969067998821}
+  enemy: {fileID: 0}
 --- !u!1 &5748672233593497994
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,6 +283,7 @@ GameObject:
   - component: {fileID: 90670320597493941}
   - component: {fileID: 7964070529861942368}
   - component: {fileID: 4563307227643959619}
+  - component: {fileID: -1719356663701382516}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -451,6 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   moveSpeed: 2
   directionChangeInterval: 2
+  maxHealth: 10
 --- !u!114 &4563307227643959619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,10 +466,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0042af85bd257e1418d9f77ed907f5aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHit
-  maxHealth: 10
-  currentHealth: 0
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
-  healthBar: {fileID: 7972626737787535069}
+--- !u!114 &-1719356663701382516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5828007380593289671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc0ea18d890943419e5125763559785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
+  damageCooldown: 0.5
+  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
+  spriteRenderer: {fileID: 4711929288451025731}
 --- !u!1 &7655068999836807677
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,9 +8,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 90670320597493941, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 90670320597493941, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711929288451025731, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5323954789178571620, guid: 228c4c9fcf3163446800c70346223006, type: 3}
     - target: {fileID: 5828007380593289671, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
       propertyPath: m_Name
-      value: Enemy Variant
+      value: MeleeEnemy
       objectReference: {fileID: 0}
     - target: {fileID: 8327568535080582143, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
       propertyPath: m_LocalPosition.x
@@ -55,5 +67,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5828007380593289671, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2757188098967474880}
   m_SourcePrefab: {fileID: 100100000, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+--- !u!1 &5192779505810836828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5828007380593289671, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+  m_PrefabInstance: {fileID: 1797297608735499419}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2757188098967474880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5192779505810836828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a8e9490047e9240b7c126b53c1018d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeEnemyController
+  moveSpeed: 2
+  directionChangeInterval: 2
+  maxHealth: 10
+  stoppingDistance: 0.5

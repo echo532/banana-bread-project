@@ -20,10 +20,12 @@ public class EnemyHealthbar : MonoBehaviour, IHealth
 
     [SerializeField] private Transform fill; // the green bar or fill object
 
-    [SerializeField] private EnemyController enemy; // Reference to enemy
+    private EnemyController enemy; // Reference to enemy
 
     private void Start()
     {
+        enemy = GetComponentInParent<EnemyController>();
+
         MaxHealth = enemy.maxHealth;
         CurrentHealth = maxHealth;
 

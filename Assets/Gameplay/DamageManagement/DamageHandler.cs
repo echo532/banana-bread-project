@@ -6,7 +6,7 @@ public class DamageHandler : MonoBehaviour
 {
     [SerializeField] private float damageCooldown = 0.5f;
 
-    [SerializeField] public PlayerController player;
+    private PlayerController player;
 
     private float lastDamageTime = -999f;
     private List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
@@ -35,6 +35,8 @@ public class DamageHandler : MonoBehaviour
 
     void Awake()
     {
+        player = Object.FindObjectOfType<PlayerController>();
+
         healthSystem = GetComponentInChildren<IHealth>();
         
 
