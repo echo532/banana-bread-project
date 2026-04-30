@@ -20,6 +20,11 @@ public class EnemyController : MonoBehaviour, IDamageDealer
         set => damage = value;
     }
 
+    public virtual string Element
+    {
+        get => "";
+    }
+
     public float MoveSpeed
     {
         get => moveSpeed;

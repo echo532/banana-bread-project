@@ -26,6 +26,8 @@ public class SwordAttack : MonoBehaviour, IWeapon, IDamageDealer
         set => damage = value;
     }
 
+    public string Element => "";
+
 
     void Awake()
     {

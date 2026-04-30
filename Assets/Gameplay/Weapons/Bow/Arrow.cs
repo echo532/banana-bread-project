@@ -11,9 +11,12 @@ public class Arrow : MonoBehaviour, IProjectile
     {
         damage = damageAmount;
     }
+
+    private string element = "ice";
     private Rigidbody2D rb;
 
     public int Damage => damage;
+    public string Element => element;
 
     void Awake()
     {

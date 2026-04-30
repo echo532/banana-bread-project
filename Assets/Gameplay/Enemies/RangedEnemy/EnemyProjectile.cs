@@ -11,6 +11,8 @@ public class EnemyProjectile : MonoBehaviour, IProjectile
 
     public int Damage => damage;
 
+    public string Element => "ice"; 
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

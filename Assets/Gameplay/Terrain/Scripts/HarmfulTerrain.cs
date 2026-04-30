@@ -13,6 +13,8 @@ public class Terrain : MonoBehaviour, ITickDmg
     public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
     public int Duration { get => duration; set => duration = value; }
 
+    public string Element => "fire";
+
     private void Start()
     {
 

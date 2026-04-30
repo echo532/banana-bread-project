@@ -19,6 +19,8 @@ public class TeleportDamageHitbox : MonoBehaviour, IDamageDealer, ITickDmg
         set => damage = value;
     }
 
+    public string Element => "fire";
+
     public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
     public int Duration { get => duration; set => duration = value; }
     

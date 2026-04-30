@@ -74,7 +74,7 @@ public class DamageHandler : MonoBehaviour
     void Update()
     {
         foreach (var i in tickDamage){
-            ApplyTickDamage(i.tick.DamagePerTick, i.tick.Duration, i.sourceId);
+            ApplyTickDamage(i.tick.DamagePerTick, i.tick.Element, i.tick.Duration, i.sourceId);
         }
 
         for (int i = activeTickDamage.Count - 1; i >= 0; i--)
@@ -88,7 +88,7 @@ public class DamageHandler : MonoBehaviour
             // Apply tick damage
             if (tick.tickTimer >= 1f)
             {
-                HandleDamage(tick.DamagePerTick, "tick"); // ✅ ignores cooldown
+                HandleDamage(tick.DamagePerTick, tick.Element, "tick"); // ✅ ignores cooldown
                 tick.tickTimer = 0f;
             }
 
@@ -102,16 +102,23 @@ public class DamageHandler : MonoBehaviour
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
 
-        int totalDamage = 0;
+       
 
         if (canTakeDamage)
         {
-            foreach (var w in projectiles) totalDamage += w.projectile.Damage;
+            foreach (var w in projectiles){
+                if (w.projectile.Damage > 0)
+                    HandleDamage( w.projectile.Damage, w.projectile.Element);
+            } 
+
             projectiles.Clear(); // assume projectile is consumed on hit
-            foreach (var w in damageDealers) totalDamage += w.dealer.Damage;
+
+            foreach (var w in damageDealers)
+            {
+                if (w.dealer.Damage > 0)
+                    HandleDamage( w.dealer.Damage, w.dealer.Element);
+            }
             damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
-            if (totalDamage > 0)
-                HandleDamage(totalDamage);
         }
 
     }
@@ -130,17 +137,17 @@ public class DamageHandler : MonoBehaviour
             list.RemoveAll(item => item.Item1 == comp);
     }
 
-    private void HandleDamage(int damage, string type="normal") //should probs work on this
+    private void HandleDamage(int damage, string element, string type="normal") //should probs work on this
     {
         if (isPlayer) //player
         {
             if(type == "tick")
             {
-                ShowDamageNumber(damage, "", true, "tick");
+                ShowDamageNumber(damage, element, true, "tick");
             }
             else
             {
-                ShowDamageNumber(damage, "", true);
+                ShowDamageNumber(damage, element, true);
             }
             
         } else //handle enemy
@@ -148,16 +155,16 @@ public class DamageHandler : MonoBehaviour
             
             if (type == "tick")
             {
-               ShowDamageNumber(damage, "normal", false, type); //handles normal and tick damage types for enemies
+               ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
             }
             else
             {
                 bool crit = RollChance(player.critChance);
                 damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
                 if (crit)
-                    ShowDamageNumber(damage, "normal", false, "crit");
+                    ShowDamageNumber(damage, element, false, "crit");
                 else
-                    ShowDamageNumber(damage, "normal", false);
+                    ShowDamageNumber(damage, element, false);
             }
             
         }
@@ -227,11 +234,13 @@ public class DamageHandler : MonoBehaviour
         public int Duration { get; set; }
         public int SourceId { get; set; }
 
+        public string Element {get; set;}
+
         public float tickTimer;
         public float durationTimer;
     }
 
-    public void ApplyTickDamage(int damage, int duration, int sourceID)
+    public void ApplyTickDamage(int damage, string element, int duration, int sourceID)
     {
         // Check if same effect already exists (prevent duplicates)
         var existing = activeTickDamage.Find(t => t.SourceId == sourceID);
@@ -249,9 +258,10 @@ public class DamageHandler : MonoBehaviour
                 Duration = duration, // Subtract 1 second to account for immediate application
                 tickTimer = 0f,
                 durationTimer = 0f,
-                SourceId = sourceID
+                SourceId = sourceID,
+                Element = element
             });
-            HandleDamage(damage, "tick"); // Apply initial tick damage immediately
+            HandleDamage(damage, element, "tick"); // Apply initial tick damage immediately
         }
     }
 }
