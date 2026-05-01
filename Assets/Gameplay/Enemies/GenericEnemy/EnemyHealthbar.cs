@@ -38,6 +38,8 @@ public class EnemyHealthbar : MonoBehaviour, IHealth
         currentHealth -= damage;
         float fillAmount = (float)currentHealth / maxHealth;
         SetHealth(fillAmount);
+
+        
     }
 
     public void SetHealth(float fraction)

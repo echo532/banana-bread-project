@@ -8,7 +8,8 @@ public class Terrain : MonoBehaviour, ITickDmg
 
     [SerializeField] private int duration = 1; // Duration of damage in seconds
 
-    private DamageHandler damageHandler;
+    private EnemyDamageHandler damageHandler; //temporary for now
+    private PlayerDamageHandler playerDamageHandler;
 
     public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
     public int Duration { get => duration; set => duration = value; }
@@ -18,17 +19,35 @@ public class Terrain : MonoBehaviour, ITickDmg
     private void Start()
     {
 
-        damageHandler = GetComponent<DamageHandler>();
+        damageHandler = GetComponent<EnemyDamageHandler>();
+        playerDamageHandler = GetComponent<PlayerDamageHandler>();
         
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.CompareTag("Player"))
+        {
+            playerDamageHandler = collision.GetComponent<PlayerDamageHandler>();
+            playerDamageHandler?.HandleEnter(collision);
+        }
+        else if (collision.CompareTag("Enemy"))
+        {
+            damageHandler?.HandleEnter(collision);
+        }
         damageHandler?.HandleEnter(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if(collision.CompareTag("Player"))
+        {
+            playerDamageHandler?.HandleExit(collision);
+        }
+        else if (collision.CompareTag("Enemy"))
+        {
+            damageHandler?.HandleExit(collision);
+        }
         damageHandler?.HandleExit(collision);
     }
 }

@@ -19,11 +19,11 @@ public class PlayerDamageHandler : MonoBehaviour
 
     private int critChance;
 
-    private TickSystem tickSystem = new TickSystem();
-
     private List<GameObject> activeDamageTexts = new List<GameObject>();
 
     public GameObject DamageTextPrefab;
+
+    private TickSystem tickSystem = new TickSystem();
 
     void Awake()
     {

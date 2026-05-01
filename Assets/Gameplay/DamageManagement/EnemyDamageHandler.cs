@@ -57,6 +57,8 @@ public class EnemyDamageHandler : MonoBehaviour
 
     void Update(){
 
+        tickSystem.Update(Time.deltaTime, damageHandler.tickDamage, HandleDamage);
+
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
         int totalDamage = 0;

@@ -70,7 +70,7 @@ public class DamageHandler
         healthSystem = health;
     }
 
-    void Update()
+    public void TestTick()
     {
 
         //all tick updates and applications
@@ -78,6 +78,7 @@ public class DamageHandler
 
 
     }
+
 
     public bool ProcessDamage()
     {

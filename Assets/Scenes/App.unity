@@ -382,7 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2409074f9fd89ed46a9d606957b90a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilityCooldownUI
-  ability: {fileID: 0}
+  ability: {fileID: 887349195}
   fillImage: {fileID: 578204979}
   cooldownText: {fileID: 149964032}
 --- !u!1 &275283643
@@ -695,6 +695,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   meleeEnemyPrefab: {fileID: 5192779505810836828, guid: d378c0d1e5fb7d7409b9f07ec3d7abdd, type: 3}
   rangedEnemyPrefab: {fileID: 1026173322537062096, guid: a7f5942f44aca0148a4cf5213dabaad4, type: 3}
+--- !u!114 &887349195 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6566631354822319698, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+  m_PrefabInstance: {fileID: 649517959}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f924dd4606aeaf44eab5156a2ae16eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportAbility
 --- !u!1001 &931245540
 PrefabInstance:
   m_ObjectHideFlags: 0
