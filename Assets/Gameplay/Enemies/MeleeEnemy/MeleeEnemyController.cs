@@ -6,10 +6,14 @@ public class MeleeEnemyController : EnemyController, IDamageDealer
     
     private Transform playerTransform;
 
+    private EnemyController parentComponent;
+
     
     protected override void Start()
     {
+        parentComponent = GetComponent<EnemyController>();
         Damage = 5;
+        MoveSpeed = 3f;
         // Find the player in the scene (assumes tag "Player")
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -20,8 +24,11 @@ public class MeleeEnemyController : EnemyController, IDamageDealer
     
     void Update()
     {
+
         if (playerTransform == null) return;
-        
+
+        if(parentComponent.MoveSpeed == 0f) return; // skip movement if frozen
+        Debug.Log(MoveSpeed);
         // Calculate direction to player
         Vector2 direction = (playerTransform.position - transform.position).normalized;
         

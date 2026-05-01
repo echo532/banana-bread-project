@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class DamageHandler : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class DamageHandler : MonoBehaviour
 
     void Awake()
     {
-        player = Object.FindObjectOfType<PlayerController>();
+        player = UnityEngine.Object.FindObjectOfType<PlayerController>();
 
         healthSystem = GetComponentInChildren<IHealth>();
         
@@ -56,6 +57,7 @@ public class DamageHandler : MonoBehaviour
             enemy = this.gameObject.GetComponent<EnemyController>();
             critChance = 0;
             damageCooldown = 0.0f;
+            tempSpeed = enemy.moveSpeed;
         }
     }
 
@@ -69,7 +71,6 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleExit(Collider2D other)
     {
-        Debug.Log("HandleExit called for: " + other.gameObject.name);
         RemoveIfInterface<IDamageDealer>(other, damageDealers);
         RemoveIfInterface<ITickDmg>(other, tickDamage);
     }
@@ -84,7 +85,10 @@ public class DamageHandler : MonoBehaviour
             if(isFrozen)
             {
                 enemy.moveSpeed = 0f; // skip rest of update if frozen}
-            } 
+            } else
+            {
+                enemy.moveSpeed = tempSpeed; // reset to normal speed if not frozen
+            }
         }
         
 
@@ -128,7 +132,7 @@ public class DamageHandler : MonoBehaviour
                      HandleDamage( w.projectile.Damage, w.projectile.Element);
                      if(w.projectile.Element == "ice" && !isPlayer) // Freeze player if hit by enemy projectile
                      {
-                        StartCoroutine(Freeze(enemy.moveSpeed, 5f));
+                        StartCoroutine(Freeze(5f));
                      }
                 }
                    
@@ -216,8 +220,8 @@ public class DamageHandler : MonoBehaviour
         GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
         // Stack offset
-        float yOffset = activeDamageTexts.Count * Random.Range(-0.02f, 0.02f); // 0.3 units above previous
-        float xOffset = Random.Range(-0.5f, 0.5f); // horizontal variation
+        float yOffset = activeDamageTexts.Count * UnityEngine.Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+        float xOffset = UnityEngine.Random.Range(-0.5f, 0.5f); // horizontal variation
         dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
         // Set damage & element
@@ -244,10 +248,9 @@ public class DamageHandler : MonoBehaviour
         }
     }
 
-    IEnumerator Freeze(float beginningSpeed, float duration)
+    IEnumerator Freeze(float duration)
     {
         isFrozen = true;
-        tempSpeed = beginningSpeed;
 
         yield return new WaitForSeconds(duration);
 
