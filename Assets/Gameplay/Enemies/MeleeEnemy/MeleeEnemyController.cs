@@ -10,7 +10,6 @@ public class MeleeEnemyController : EnemyController, IDamageDealer
     protected override void Start()
     {
         Damage = 5;
-        MoveSpeed = 2f;
         // Find the player in the scene (assumes tag "Player")
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)

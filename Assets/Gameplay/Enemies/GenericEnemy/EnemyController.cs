@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageDealer
 {
-    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] public float moveSpeed = 2f;
     [SerializeField] private float directionChangeInterval = 2f;
 
     protected Vector2 moveDirection;        // now protected so child classes can read it
@@ -104,4 +104,5 @@ public class EnemyController : MonoBehaviour, IDamageDealer
     {
         // empty, this enemy doesn't attack
     }
+
 }

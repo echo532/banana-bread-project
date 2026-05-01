@@ -32,6 +32,9 @@ public class DamageHandler : MonoBehaviour
 
     private IHealth healthSystem; // Can be either player or enemy health system
 
+    private EnemyController enemy; // Reference to enemy, if applicable
+    private bool isFrozen = false;
+    private float tempSpeed;
 
     void Awake()
     {
@@ -42,14 +45,15 @@ public class DamageHandler : MonoBehaviour
 
         originalColor = spriteRenderer.color; // store the original color
 
-        if(GetComponent<PlayerController>() != null) //if this is a player
+        if(CompareTag("Player")) //if this is a player
         {
             isPlayer = true;
-            critChance = GetComponent<PlayerController>().critChance;
+            critChance = player.critChance;
             damageCooldown = 0.5f;
         } else //this is an enemy or some other thing (terrain, etc.)
         {
             isPlayer = false;
+            enemy = this.gameObject.GetComponent<EnemyController>();
             critChance = 0;
             damageCooldown = 0.0f;
         }
@@ -57,7 +61,6 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleEnter(Collider2D other)
     {
-        
         AddIfInterface<IProjectile, int>(other, other.gameObject.GetInstanceID(), projectiles);
         AddIfInterface<IDamageDealer, int>(other, other.gameObject.GetInstanceID(), damageDealers);
         AddIfInterface<ITickDmg, int>(other, other.gameObject.GetInstanceID(), tickDamage);
@@ -73,6 +76,19 @@ public class DamageHandler : MonoBehaviour
 
     void Update()
     {
+
+
+        //freeze section
+        if (!isPlayer)
+        {
+            if(isFrozen)
+            {
+                enemy.moveSpeed = 0f; // skip rest of update if frozen}
+            } 
+        }
+        
+
+        //tick damage section
         foreach (var i in tickDamage){
             ApplyTickDamage(i.tick.DamagePerTick, i.tick.Element, i.tick.Duration, i.sourceId);
         }
@@ -108,7 +124,14 @@ public class DamageHandler : MonoBehaviour
         {
             foreach (var w in projectiles){
                 if (w.projectile.Damage > 0)
-                    HandleDamage( w.projectile.Damage, w.projectile.Element);
+                {
+                     HandleDamage( w.projectile.Damage, w.projectile.Element);
+                     if(w.projectile.Element == "ice" && !isPlayer) // Freeze player if hit by enemy projectile
+                     {
+                        StartCoroutine(Freeze(enemy.moveSpeed, 5f));
+                     }
+                }
+                   
             } 
 
             projectiles.Clear(); // assume projectile is consumed on hit
@@ -219,6 +242,16 @@ public class DamageHandler : MonoBehaviour
             spriteRenderer.color = originalColor;
             yield return new WaitForSeconds(0.15f);
         }
+    }
+
+    IEnumerator Freeze(float beginningSpeed, float duration)
+    {
+        isFrozen = true;
+        tempSpeed = beginningSpeed;
+
+        yield return new WaitForSeconds(duration);
+
+        isFrozen = false;
     }
 
     public bool RollChance(int percent)
