@@ -10,13 +10,13 @@ public class PlayerCollisionHandler : MonoBehaviour
 
     public SpriteRenderer spriteRenderer; // Assign in Inspector
 
-    private DamageHandler damageHandler;
+    private PlayerDamageHandler damageHandler;
     
     void Start()
     {
         healthSystem = GetComponent<HealthSystem>();
 
-        damageHandler = GetComponent<DamageHandler>();
+        damageHandler = GetComponent<PlayerDamageHandler>();
     }
     
     private void OnTriggerEnter2D(Collider2D other)

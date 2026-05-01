@@ -12,14 +12,14 @@ public class EnemyHit : MonoBehaviour
     public GameObject DamageTextPrefab;
     private EnemyHealthbar healthBar;
 
-    private DamageHandler damageHandler;
+    private EnemyDamageHandler damageHandler;
     private void Start()
     {
 
         player = GetComponent<PlayerController>();
         healthBar = GetComponent<EnemyHealthbar>();
 
-        damageHandler = GetComponent<DamageHandler>();
+        damageHandler = GetComponent<EnemyDamageHandler>();
         
     }
 

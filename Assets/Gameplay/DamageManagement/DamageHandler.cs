@@ -12,7 +12,7 @@ public class DamageHandler
     private float lastDamageTime = -999f;
     public List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
 
-    private List<(ITickDmg tick, int sourceId)> tickDamage = new();
+    public List<(ITickDmg tick, int sourceId)> tickDamage = new();
     public List<(IProjectile projectile, int sourceId)> projectiles = new();
 
     public GameObject DamageTextPrefab;

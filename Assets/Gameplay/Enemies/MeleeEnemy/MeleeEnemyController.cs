@@ -28,7 +28,6 @@ public class MeleeEnemyController : EnemyController, IDamageDealer
         if (playerTransform == null) return;
 
         if(parentComponent.MoveSpeed == 0f) return; // skip movement if frozen
-        Debug.Log(MoveSpeed);
         // Calculate direction to player
         Vector2 direction = (playerTransform.position - transform.position).normalized;
         

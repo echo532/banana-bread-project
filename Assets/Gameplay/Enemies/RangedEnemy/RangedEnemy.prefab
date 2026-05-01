@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 3670304541976318019}
   - component: {fileID: 6890136669269364642}
   - component: {fileID: 7028027032296701524}
-  - component: {fileID: 3962904750742257051}
   - component: {fileID: 4542675524546081533}
-  - component: {fileID: 4800721319059940288}
+  - component: {fileID: -7411026288427589809}
   m_Layer: 7
   m_Name: RangedEnemy
   m_TagString: Enemy
@@ -184,21 +183,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHit
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
---- !u!114 &3962904750742257051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1026173322537062096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfc0ea18d890943419e5125763559785, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
-  damageCooldown: 0.5
-  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
-  spriteRenderer: {fileID: 2285766337591643220}
 --- !u!114 &4542675524546081533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +200,7 @@ MonoBehaviour:
   maxHealth: 15
   fireCooldown: 1.5
   arrowPrefab: {fileID: 6269811852436319416, guid: 95fa9dd947c487340832b91829f1eb5a, type: 3}
---- !u!114 &4800721319059940288
+--- !u!114 &-7411026288427589809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -225,12 +209,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1026173322537062096}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfc0ea18d890943419e5125763559785, type: 3}
+  m_Script: {fileID: 11500000, guid: 81c78e459a118f24188ce7338fcc0d7b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamageHandler
+  spriteRenderer: {fileID: 2285766337591643220}
   damageCooldown: 0.5
   DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
-  spriteRenderer: {fileID: 2285766337591643220}
 --- !u!1 &1078563475631645524
 GameObject:
   m_ObjectHideFlags: 0

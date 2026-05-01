@@ -53,9 +53,18 @@ public class PlayerDamageHandler : MonoBehaviour
 
     void Update(){
 
+        tickSystem.Update(Time.deltaTime, damageHandler.tickDamage, HandleDamage);
+
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
         int totalDamage = 0;
+        if(damageHandler.projectiles.Count > 0 || damageHandler.damageDealers.Count > 0)
+        {
+            Debug.Log("Damage sources: " + damageHandler.projectiles.Count + " projectiles, " + damageHandler.damageDealers.Count + " dealers.");
+        } else
+        {
+            Debug.Log("No damage sources currently.");
+        }
         foreach (var w in damageHandler.projectiles)
         {
             if (w.projectile.Damage > 0)
@@ -82,13 +91,6 @@ public class PlayerDamageHandler : MonoBehaviour
         damageHandler.damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
         //return totalDamage > 0;
 
-        // if (canTakeDamage && damageHandler.ProcessDamage()) //if damage taken
-        // {
-        //     StartCoroutine(FlashRed());
-        //     lastDamageTime = Time.time;
-
-
-        // }
     }
 
     private void HandleDamage(int damage, string element, string type="normal") //should probs work on this
@@ -130,7 +132,7 @@ public class PlayerDamageHandler : MonoBehaviour
         }
 
         
-        //StartCoroutine(FlashRed());
+        StartCoroutine(FlashRed());
         lastDamageTime = Time.time;
 
 

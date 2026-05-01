@@ -478,9 +478,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c78e459a118f24188ce7338fcc0d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDamageHandler
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 4711929288451025731}
   damageCooldown: 0.5
-  DamageTextPrefab: {fileID: 0}
+  DamageTextPrefab: {fileID: 4713367993939185681, guid: 87363a087aa05624c84451f56f21df16, type: 3}
 --- !u!1 &7655068999836807677
 GameObject:
   m_ObjectHideFlags: 0

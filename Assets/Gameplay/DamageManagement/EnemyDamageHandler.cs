@@ -31,6 +31,8 @@ public class EnemyDamageHandler : MonoBehaviour
     {
         healthSystem = GetComponentInChildren<IHealth>();
 
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
         enemy = this.gameObject.GetComponent<EnemyController>();
         critChance = 0;
         originalColor = spriteRenderer.color;
@@ -97,6 +99,11 @@ public class EnemyDamageHandler : MonoBehaviour
     {
         healthSystem.TakeDamage(damage);
         HandleVisibleDamage(damage, element, type);
+
+        if (healthSystem.CurrentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     private void HandleVisibleDamage(int damage, string element, string type="normal") //should probs work on this
@@ -132,8 +139,9 @@ public class EnemyDamageHandler : MonoBehaviour
         }
 
         
-        //StartCoroutine(FlashRed());
+        StartCoroutine(FlashRed());
         lastDamageTime = Time.time;
+
 
 
         
@@ -165,6 +173,12 @@ public class EnemyDamageHandler : MonoBehaviour
     {
         int roll = UnityEngine.Random.Range(0, 100); // 0–99
         return roll < percent;
+    }
+
+    private void Die()
+    {
+        // Optional: play death animation, effects, sound, etc.
+        Destroy(gameObject);
     }
 
     
