@@ -13,7 +13,6 @@ public class DamageHandler : MonoBehaviour
     private List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
 
     private List<(ITickDmg tick, int sourceId)> tickDamage = new();
-    private List<ActiveTickEffect> activeTickDamage = new();
     private List<(IProjectile projectile, int sourceId)> projectiles = new();
 
     public GameObject DamageTextPrefab;
@@ -36,6 +35,8 @@ public class DamageHandler : MonoBehaviour
     private EnemyController enemy; // Reference to enemy, if applicable
     private bool isFrozen = false;
     private float tempSpeed;
+
+    private TickSystem tickSystem = new TickSystem();
 
     void Awake()
     {
@@ -90,34 +91,8 @@ public class DamageHandler : MonoBehaviour
                 enemy.moveSpeed = tempSpeed; // reset to normal speed if not frozen
             }
         }
-        
 
-        //tick damage section
-        foreach (var i in tickDamage){
-            ApplyTickDamage(i.tick.DamagePerTick, i.tick.Element, i.tick.Duration, i.sourceId);
-        }
-
-        for (int i = activeTickDamage.Count - 1; i >= 0; i--)
-        {
-            var tick = activeTickDamage[i];
-
-            tick.tickTimer += Time.deltaTime;
-            tick.durationTimer += Time.deltaTime;
-            //Debug.Log(tick.durationTimer);
-
-            // Apply tick damage
-            if (tick.tickTimer >= 1f)
-            {
-                HandleDamage(tick.DamagePerTick, tick.Element, "tick"); // ✅ ignores cooldown
-                tick.tickTimer = 0f;
-            }
-
-            // Remove expired effects
-            if (tick.durationTimer >= tick.Duration)
-            {
-                activeTickDamage.RemoveAt(i);
-            }
-        }
+        tickSystem.Update(Time.deltaTime, tickDamage, HandleDamage);
 
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
@@ -261,43 +236,5 @@ public class DamageHandler : MonoBehaviour
     {
         int roll = UnityEngine.Random.Range(0, 100); // 0–99
         return roll < percent;
-    }
-
-
-    class ActiveTickEffect : ITickDmg
-    {
-        public int DamagePerTick { get; set; }
-        public int Duration { get; set; }
-        public int SourceId { get; set; }
-
-        public string Element {get; set;}
-
-        public float tickTimer;
-        public float durationTimer;
-    }
-
-    public void ApplyTickDamage(int damage, string element, int duration, int sourceID)
-    {
-        // Check if same effect already exists (prevent duplicates)
-        var existing = activeTickDamage.Find(t => t.SourceId == sourceID);
-
-        if (existing != null)
-        {
-            // Refresh duration
-            //existing.durationTimer = 0f;
-        }
-        else
-        {
-            activeTickDamage.Add(new ActiveTickEffect
-            {
-                DamagePerTick = damage,
-                Duration = duration, // Subtract 1 second to account for immediate application
-                tickTimer = 0f,
-                durationTimer = 0f,
-                SourceId = sourceID,
-                Element = element
-            });
-            HandleDamage(damage, element, "tick"); // Apply initial tick damage immediately
-        }
     }
 }
