@@ -1,10 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDamageHandler : MonoBehaviour
 {
 
     private EnemyController enemy;
+
+    private PlayerController player;
 
     private float lastDamageTime = -999f;
 
@@ -18,17 +21,23 @@ public class EnemyDamageHandler : MonoBehaviour
 
     private int critChance;
 
+    private TickSystem tickSystem = new TickSystem();
+
+    private List<GameObject> activeDamageTexts = new List<GameObject>();
+
+    public GameObject DamageTextPrefab;
+
     void Awake()
     {
         healthSystem = GetComponentInChildren<IHealth>();
 
         enemy = this.gameObject.GetComponent<EnemyController>();
         critChance = 0;
-        damageCooldown = 0.0f;
-        //tempSpeed = enemy.moveSpeed;
+        originalColor = spriteRenderer.color;
+        damageCooldown = 0.5f;
 
         //setting up any references in damagehandler
-        damageHandler.GetComponent<DamageHandler>();
+        damageHandler.Setup(healthSystem);
         
     }
 
@@ -46,39 +55,120 @@ public class EnemyDamageHandler : MonoBehaviour
 
     void Update(){
 
-        //damageHandler.SomethingHealth(healthSystem);
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
-
-        if (canTakeDamage && damageHandler.ProcessDamage()) //if damage taken
+        int totalDamage = 0;
+        foreach (var w in damageHandler.projectiles)
         {
-            StartCoroutine(FlashRed());
-            lastDamageTime = Time.time;
+            if (w.projectile.Damage > 0)
+            {
+                HandleDamage(w.projectile.Damage, w.projectile.Element);
+                totalDamage += w.projectile.Damage;
+                //  if(w.projectile.Element == "ice" && !isPlayer) // Freeze player if hit by enemy projectile
+                //  {
+                //     StartCoroutine(Freeze(5f));
+                //  }
+            }
+        }
+        damageHandler.projectiles.Clear(); // assume projectile is consumed on hit
+
+        foreach (var w in damageHandler.damageDealers)
+        {
+            if (w.dealer.Damage > 0)
+            {
+                HandleDamage(w.dealer.Damage, w.dealer.Element);
+                totalDamage += w.dealer.Damage;
+            }
+                
+        }
+        damageHandler.damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
+        //return totalDamage > 0;
+
+        // if (canTakeDamage && damageHandler.ProcessDamage()) //if damage taken
+        // {
+        //     StartCoroutine(FlashRed());
+        //     lastDamageTime = Time.time;
+
+
+        // }
+    }
+
+    private void HandleDamage(int damage, string element, string type="normal") //should probs work on this
+    {
+        healthSystem.TakeDamage(damage);
+        HandleVisibleDamage(damage, element, type);
+    }
+
+    private void HandleVisibleDamage(int damage, string element, string type="normal") //should probs work on this
+    {
+        if (false) //player
+        {
+            if(type == "tick")
+            {
+                ShowDamageNumber(damage, element, true, "tick");
+            }
+            else
+            {
+                ShowDamageNumber(damage, element, true);
+            }
+            
+        } else //handle enemy
+        {
+            
+            if (type == "tick")
+            {
+               ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
+            }
+            else
+            {
+                bool crit = RollChance(player.critChance);
+                damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
+                if (crit)
+                    ShowDamageNumber(damage, element, false, "crit");
+                else
+                    ShowDamageNumber(damage, element, false);
+            }
+            
         }
 
-
+        
         //StartCoroutine(FlashRed());
-        //lastDamageTime = Time.time;
+        lastDamageTime = Time.time;
 
-        //freeze section
-        // if (!isPlayer)
-        // {
-        //     if(isFrozen)
-        //     {
-        //         enemy.moveSpeed = 0f; // skip rest of update if frozen}
-        //     } else
-        //     {
-        //         enemy.moveSpeed = tempSpeed; // reset to normal speed if not frozen
-        //     }
-        // }
+
+        
         
     }
 
-    private void Die()
+
+    void ShowDamageNumber(int damage, string element, bool playerhit = false, string type = "normal")
     {
-        // Optional: play death animation, effects, sound, etc.
-        Destroy(gameObject);
+        GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
+
+        // Stack offset
+        float yOffset = activeDamageTexts.Count * UnityEngine.Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+        float xOffset = UnityEngine.Random.Range(-0.5f, 0.5f); // horizontal variation
+        dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
+
+        // Set damage & element
+        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, type);
+
+        // Track active number
+        activeDamageTexts.Add(dmgText);
+
+        // Remove when lifetime ends
+        DamageText dt = dmgText.GetComponent<DamageText>();
+        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
     }
+
+    public bool RollChance(int percent)
+    {
+        int roll = UnityEngine.Random.Range(0, 100); // 0–99
+        return roll < percent;
+    }
+
+    
+
 
     IEnumerator FlashRed()
     {

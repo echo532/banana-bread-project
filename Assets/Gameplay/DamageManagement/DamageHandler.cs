@@ -3,17 +3,17 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class DamageHandler: MonoBehaviour
+public class DamageHandler
 {
     [SerializeField] private float damageCooldown = 0.5f;
 
     private PlayerController player;
 
     private float lastDamageTime = -999f;
-    private List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
+    public List<(IDamageDealer dealer, int sourceId)> damageDealers = new();
 
     private List<(ITickDmg tick, int sourceId)> tickDamage = new();
-    private List<(IProjectile projectile, int sourceId)> projectiles = new();
+    public List<(IProjectile projectile, int sourceId)> projectiles = new();
 
     public GameObject DamageTextPrefab;
 
@@ -65,9 +65,9 @@ public class DamageHandler: MonoBehaviour
             list.RemoveAll(item => item.Item1 == comp);
     }
 
-    void Awake()
+    public void Setup(IHealth health)
     {
-        healthSystem = GetComponent<IHealth>();
+        healthSystem = health;
     }
 
     void Update()
@@ -160,22 +160,22 @@ public class DamageHandler: MonoBehaviour
 
     void ShowDamageNumber(int damage, string element, bool playerhit = false, string type = "normal")
     {
-        GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
+        // GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
 
-        // Stack offset
-        float yOffset = activeDamageTexts.Count * UnityEngine.Random.Range(-0.02f, 0.02f); // 0.3 units above previous
-        float xOffset = UnityEngine.Random.Range(-0.5f, 0.5f); // horizontal variation
-        dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
+        // // Stack offset
+        // float yOffset = activeDamageTexts.Count * UnityEngine.Random.Range(-0.02f, 0.02f); // 0.3 units above previous
+        // float xOffset = UnityEngine.Random.Range(-0.5f, 0.5f); // horizontal variation
+        // dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
 
-        // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, type);
+        // // Set damage & element
+        // dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, type);
 
-        // Track active number
-        activeDamageTexts.Add(dmgText);
+        // // Track active number
+        // activeDamageTexts.Add(dmgText);
 
-        // Remove when lifetime ends
-        DamageText dt = dmgText.GetComponent<DamageText>();
-        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
+        // // Remove when lifetime ends
+        // DamageText dt = dmgText.GetComponent<DamageText>();
+        // dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
     }
 
 
