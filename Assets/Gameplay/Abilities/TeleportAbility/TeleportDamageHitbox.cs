@@ -25,13 +25,13 @@ public class TeleportDamageHitbox : MonoBehaviour, IDamageDealer, ITickDmg
     public int Duration { get => duration; set => duration = value; }
     
     
-    private DamageHandler damageHandler;
+    private EnemyDamageHandler damageHandler;
 
     private List<Collider2D> currentCollisions = new List<Collider2D>();
 
     void Start()
     {
-        damageHandler = GetComponent<DamageHandler>();
+        damageHandler = GetComponent<EnemyDamageHandler>();
         StartCoroutine(LifetimeRoutine());
        
     }
