@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
         new Vector3(1f, -2f, 0f),
         new Vector3(-2f, -1f, 0f)
     };
+
 
     
 
@@ -36,6 +38,19 @@ public class EnemySpawner : MonoBehaviour
             enemy.layer = enemyLayer;
         }
     }
+
+    void Update()
+    {
+        int currentEnemies = GameObject.FindGameObjectsWithTag("Enemy").Length;
+
+        if(currentEnemies == 0)
+        {
+            // Respawn enemies
+            SceneManager.LoadScene("StartMenu");
+        }
+    }
+
+
     
 
     
