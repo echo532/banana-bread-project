@@ -62,6 +62,7 @@ public class EnemyDamageHandler : MonoBehaviour
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
         int totalDamage = 0;
+
         foreach (var w in damageHandler.projectiles)
         {
             if (w.projectile.Damage > 0)
@@ -110,44 +111,26 @@ public class EnemyDamageHandler : MonoBehaviour
 
     private void HandleVisibleDamage(int damage, string element, string type="normal") //should probs work on this
     {
-        if (false) //player
+            
+        if (type == "tick")
         {
-            if(type == "tick")
-            {
-                ShowDamageNumber(damage, element, true, "tick");
-            }
-            else
-            {
-                ShowDamageNumber(damage, element, true);
-            }
-            
-        } else //handle enemy
-        {
-            
-            if (type == "tick")
-            {
-               ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
-            }
-            else
-            {
-                bool crit = RollChance(player.critChance);
-                damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
-                if (crit)
-                    ShowDamageNumber(damage, element, false, "crit");
-                else
-                    ShowDamageNumber(damage, element, false);
-            }
-            
+            ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
         }
+        else
+        {
+            bool crit = RollChance(player.critChance);
+            damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
+            if (crit)
+                ShowDamageNumber(damage, element, false, "crit");
+            else
+                ShowDamageNumber(damage, element, false);
+        }
+            
+        
 
         
         StartCoroutine(FlashRed());
         lastDamageTime = Time.time;
-
-
-
-        
-        
     }
 
 

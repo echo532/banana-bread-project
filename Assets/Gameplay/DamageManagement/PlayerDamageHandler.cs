@@ -58,13 +58,7 @@ public class PlayerDamageHandler : MonoBehaviour
 
         bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
         int totalDamage = 0;
-        if(damageHandler.projectiles.Count > 0 || damageHandler.damageDealers.Count > 0)
-        {
-            Debug.Log("Damage sources: " + damageHandler.projectiles.Count + " projectiles, " + damageHandler.damageDealers.Count + " dealers.");
-        } else
-        {
-            Debug.Log("No damage sources currently.");
-        }
+
         foreach (var w in damageHandler.projectiles)
         {
             if (w.projectile.Damage > 0)
@@ -101,43 +95,18 @@ public class PlayerDamageHandler : MonoBehaviour
 
     private void HandleVisibleDamage(int damage, string element, string type="normal") //should probs work on this
     {
-        if (true) //player
+        
+        if(type == "tick")
         {
-            if(type == "tick")
-            {
-                ShowDamageNumber(damage, element, true, "tick");
-            }
-            else
-            {
-                ShowDamageNumber(damage, element, true);
-            }
-            
-        } else //handle enemy
+            ShowDamageNumber(damage, element, true, "tick");
+        }
+        else
         {
-            
-            if (type == "tick")
-            {
-               ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
-            }
-            else
-            {
-                bool crit = RollChance(player.critChance);
-                damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
-                if (crit)
-                    ShowDamageNumber(damage, element, false, "crit");
-                else
-                    ShowDamageNumber(damage, element, false);
-            }
-            
+            ShowDamageNumber(damage, element, true);
         }
 
-        
         StartCoroutine(FlashRed());
         lastDamageTime = Time.time;
-
-
-        
-        
     }
 
 
