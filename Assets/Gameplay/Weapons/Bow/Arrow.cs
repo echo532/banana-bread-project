@@ -3,20 +3,27 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Arrow : MonoBehaviour, IProjectile
 {
-    public float speed = 10f;
-    
+    [SerializeField] private float speed = 10f;
+
     private int damage;
+    private ElementType element = ElementType.Physical;
+
+    private Rigidbody2D rb;
+
+    public int Damage => damage;
+
+    // Convert enum to string for compatibility with your existing damage system
+    public string Element => element.ToString().ToLower();
 
     public void SetDamage(int damageAmount)
     {
         damage = damageAmount;
     }
 
-    private string element = "ice";
-    private Rigidbody2D rb;
-
-    public int Damage => damage;
-    public string Element => element;
+    public void SetElement(ElementType newElement)
+    {
+        element = newElement;
+    }
 
     void Awake()
     {
@@ -28,9 +35,9 @@ public class Arrow : MonoBehaviour, IProjectile
     public void Shoot(Vector2 direction)
     {
         direction.Normalize();
+
         rb.linearVelocity = direction * speed;
 
-        // Rotate arrow to face direction
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
@@ -38,17 +45,19 @@ public class Arrow : MonoBehaviour, IProjectile
     private void OnTriggerEnter2D(Collider2D collision)
     {
         EnemyHit enemy = collision.GetComponent<EnemyHit>();
+
         if (enemy != null)
         {
-            Destroy(gameObject); // destroy arrow
+            Destroy(gameObject);
         }
     }
 
     void Update()
     {
         Vector3 screenPos = Camera.main.WorldToViewportPoint(transform.position);
-        // Viewport: x,y in 0–1, z > 0 is in front of camera
-        if (screenPos.x < 0 || screenPos.x > 1 || screenPos.y < 0 || screenPos.y > 1)
+
+        if (screenPos.x < 0 || screenPos.x > 1 ||
+            screenPos.y < 0 || screenPos.y > 1)
         {
             Destroy(gameObject);
         }

@@ -23,8 +23,7 @@ public class TickSystem {
 
         if (existing != null)
         {
-            // Refresh duration
-            //existing.durationTimer = 0f;
+            existing.durationTimer = 0f;
         }
         else
         {

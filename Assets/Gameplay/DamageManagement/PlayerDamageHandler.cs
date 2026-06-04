@@ -127,7 +127,6 @@ public class PlayerDamageHandler : MonoBehaviour
 
         // Remove when lifetime ends
         DamageText dt = dmgText.GetComponent<DamageText>();
-        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
     }
 
     public bool RollChance(int percent)

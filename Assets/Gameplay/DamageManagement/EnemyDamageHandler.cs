@@ -1,48 +1,47 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDamageHandler : MonoBehaviour
 {
-
-    private EnemyController enemy;
-
     private PlayerController player;
 
-    private float lastDamageTime = -999f;
-
-    private IHealth healthSystem; // Can be either player or enemy health system
+    private IHealth healthSystem;
     private DamageHandler damageHandler = new DamageHandler();
-
-    public SpriteRenderer spriteRenderer; // Assign in Inspector
-    private Color originalColor;
-
-    [SerializeField] private float damageCooldown = 0.5f;
-
-    private int critChance;
-
     private TickSystem tickSystem = new TickSystem();
 
-    private List<GameObject> activeDamageTexts = new List<GameObject>();
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    private Color originalColor;
 
     public GameObject DamageTextPrefab;
 
+    private float lastDamageTime = -999f;
+
+    [SerializeField] private float damageCooldown = 0.5f;
+
+    // ---------------------------
+    // STATUS EFFECTS
+    // ---------------------------
+    public List<StatusEffect> activeEffects = new();
+
     void Awake()
     {
-        healthSystem = GetComponentInChildren<IHealth>();
-
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-        enemy = this.gameObject.GetComponent<EnemyController>();
-        critChance = 0;
-        originalColor = spriteRenderer.color;
-        damageCooldown = 0.5f;
-
-        //setting up any references in damagehandler
+        healthSystem = GetComponentInChildren<IHealth>();
         damageHandler.Setup(healthSystem);
-        
+
+        originalColor = spriteRenderer.color;
     }
 
+    void Update()
+    {
+        HandleIncomingDamage();
+        HandleStatusEffects();
+    }
+
+    // ---------------------------
+    // COLLISIONS
+    // ---------------------------
     public void HandleEnter(Collider2D other)
     {
         damageHandler.HandleEnter(other);
@@ -53,136 +52,113 @@ public class EnemyDamageHandler : MonoBehaviour
         damageHandler.HandleExit(other);
     }
 
+    // ---------------------------
+    // MAIN DAMAGE LOOP
+    // ---------------------------
+    private void HandleIncomingDamage()
+    {
+        // Tick system (DO NOT bypass DealDamage)
+        tickSystem.Update(Time.deltaTime, damageHandler.tickDamage, DealDamage);
 
-
-    void Update(){
-
-        tickSystem.Update(Time.deltaTime, damageHandler.tickDamage, HandleDamage);
-
-
-        bool canTakeDamage = Time.time - lastDamageTime >= damageCooldown;
-        int totalDamage = 0;
-
+        // Projectiles
         foreach (var w in damageHandler.projectiles)
         {
             if (w.projectile.Damage > 0)
             {
-                HandleDamage(w.projectile.Damage, w.projectile.Element);
-                totalDamage += w.projectile.Damage;
-                //  if(w.projectile.Element == "ice" && !isPlayer) // Freeze player if hit by enemy projectile
-                //  {
-                //     StartCoroutine(Freeze(5f));
-                //  }
+                DealDamage(w.projectile.Damage, w.projectile.Element, "normal");
+
+                // Example: fire → burn
+                if (w.projectile.Element == "fire")
+                {
+                    ApplyStatus(new BurnStatusEffect(DealDamage)
+                    {
+                        damagePerTick = 2,
+                        Duration = 5f
+                    });
+                }
             }
         }
-        damageHandler.projectiles.Clear(); // assume projectile is consumed on hit
+        damageHandler.projectiles.Clear();
 
+        // Melee / contact damage
         foreach (var w in damageHandler.damageDealers)
         {
             if (w.dealer.Damage > 0)
             {
-                HandleDamage(w.dealer.Damage, w.dealer.Element);
-                totalDamage += w.dealer.Damage;
+                DealDamage(w.dealer.Damage, w.dealer.Element, "normal");
             }
-                
         }
-        damageHandler.damageDealers.Clear(); // prevent multiple hits from same source without exiting and re-entering
-        //return totalDamage > 0;
-
-        // if (canTakeDamage && damageHandler.ProcessDamage()) //if damage taken
-        // {
-        //     StartCoroutine(FlashRed());
-        //     lastDamageTime = Time.time;
-
-
-        // }
+        damageHandler.damageDealers.Clear();
     }
 
-    private void HandleDamage(int damage, string element, string type="normal") //should probs work on this
+    // ---------------------------
+    // UNIFIED DAMAGE FUNCTION (IMPORTANT)
+    // ---------------------------
+    private void DealDamage(int damage, string element, string type = "normal")
     {
         healthSystem.TakeDamage(damage);
-        HandleVisibleDamage(damage, element, type);
 
+        ShowDamageNumber(damage, element, type);
+
+        CheckDeath();
+    }
+
+    // ---------------------------
+    // DEATH CHECK (USED BY EVERYTHING)
+    // ---------------------------
+    private void CheckDeath()
+    {
         if (healthSystem.CurrentHealth <= 0)
         {
-            Die();
+            Destroy(gameObject);
         }
     }
 
-    private void HandleVisibleDamage(int damage, string element, string type="normal") //should probs work on this
+    // ---------------------------
+    // DAMAGE NUMBER UI
+    // ---------------------------
+    private void ShowDamageNumber(int damage, string element, string type)
     {
-            
-        if (type == "tick")
+        if (DamageTextPrefab == null) return;
+
+        GameObject obj = Instantiate(
+            DamageTextPrefab,
+            transform.position + Vector3.up,
+            Quaternion.identity
+        );
+
+        obj.GetComponent<DamageText>()
+            .SetDamage(damage, element, false, type);
+    }
+
+    // ---------------------------
+    // STATUS EFFECT SYSTEM
+    // ---------------------------
+    private void HandleStatusEffects()
+    {
+        for (int i = activeEffects.Count - 1; i >= 0; i--)
         {
-            ShowDamageNumber(damage, element, false, type); //handles normal and tick damage types for enemies
-        }
-        else
-        {
-            bool crit = RollChance(player.critChance);
-            damage = (int)(crit ? damage * (1.0f+player.critDmg) : damage); // crit for enemies only
-            if (crit)
-                ShowDamageNumber(damage, element, false, "crit");
-            else
-                ShowDamageNumber(damage, element, false);
-        }
-            
-        
+            var effect = activeEffects[i];
 
-        
-        StartCoroutine(FlashRed());
-        lastDamageTime = Time.time;
-    }
+            effect.Timer += Time.deltaTime;
+            effect.OnTick(healthSystem);
 
-
-    void ShowDamageNumber(int damage, string element, bool playerhit = false, string type = "normal")
-    {
-        GameObject dmgText = Instantiate(DamageTextPrefab, transform.position + Vector3.up,Quaternion.identity);
-
-        // Stack offset
-        float yOffset = activeDamageTexts.Count * UnityEngine.Random.Range(-0.02f, 0.02f); // 0.3 units above previous
-        float xOffset = UnityEngine.Random.Range(-0.5f, 0.5f); // horizontal variation
-        dmgText.transform.position += new Vector3(xOffset, yOffset, 0);
-
-        // Set damage & element
-        dmgText.GetComponent<DamageText>().SetDamage(damage, element, playerhit, type);
-
-        // Track active number
-        activeDamageTexts.Add(dmgText);
-
-        // Remove when lifetime ends
-        DamageText dt = dmgText.GetComponent<DamageText>();
-        dt.OnDestroyEvent += () => activeDamageTexts.Remove(dmgText);
-    }
-
-    public bool RollChance(int percent)
-    {
-        int roll = UnityEngine.Random.Range(0, 100); // 0–99
-        return roll < percent;
-    }
-
-    private void Die()
-    {
-        // Optional: play death animation, effects, sound, etc.
-        Destroy(gameObject);
-    }
-
-    
-
-
-    IEnumerator FlashRed()
-    {
-        for (int i = 0; i < 1; i++)
-        {
-            // Turn red
-            spriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(0.15f);
-
-            // Back to original color
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(0.15f);
+            if (effect.IsExpired)
+            {
+                effect.OnExpire(healthSystem);
+                activeEffects.RemoveAt(i);
+            }
         }
     }
 
+    public void ApplyStatus(StatusEffect effect)
+    {
+        effect.OnApply(healthSystem);
+        activeEffects.Add(effect);
+    }
 
-    
+    public bool HasEffect(string id)
+    {
+        return activeEffects.Exists(e => e.Id == id);
+    }
 }

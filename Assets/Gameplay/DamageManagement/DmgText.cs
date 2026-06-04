@@ -1,148 +1,81 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+
 public class DamageText : MonoBehaviour
 {
-    public float moveSpeed = 2f;
-    public float lifetime = 1f;
-    public System.Action OnDestroyEvent;
     private TextMeshPro text;
+
+    public float moveSpeed = 1f;
+    public float lifetime = 1f;
+
     private Color color;
-    private float size;
-    private FontStyles style;
-    private float popDuration;
-    private float maxScale;
-    private float shakeDuration;
-    private float shakeMagnitude;
-    public RectTransform dmgTextRect;
 
     void Awake()
     {
         text = GetComponent<TextMeshPro>();
-        color = text.color;
-        size = text.fontSize;
-        style = text.fontStyle; //FontStyle.Normal FontStyle.Bold FontStyle.Italic FontStyle.BoldAndItalic
-        dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
     }
 
     public void SetDamage(int damage, string element, bool playerhit, string type)
     {
         text.text = damage.ToString();
 
-        //default damage values
-        color = Color.gray;
-        moveSpeed = 0.5f;
-        style = FontStyles.Normal;
-        popDuration = 0.1f;
-        maxScale = 1.2f;
-        shakeDuration = 0f;
-        shakeMagnitude = 0f;
-        dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
+        // ---------------------------
+        // DEFAULT STYLE
+        // ---------------------------
+        color = Color.white;
+        text.fontSize = 6f;
+        text.fontStyle = FontStyles.Normal;
+        moveSpeed = 1f;
 
-
-        if(playerhit)
-        {
-            color = Color.yellow;
-            moveSpeed = 0.8f;
-            size = 15f;
-            style = FontStyles.Bold;
-            popDuration = 0.2f;
-            maxScale = 2.0f;
-            shakeDuration = 0.15f;
-            shakeMagnitude = 0.075f;
-            dmgTextRect.pivot = new Vector2(0.5f, 0.8f);
-
-        } 
-
+        // ---------------------------
+        // TYPE-BASED STYLING
+        // ---------------------------
         if (type == "crit")
         {
-            moveSpeed = 1f;
-            size = 10f;
-            style = FontStyles.Bold;
-            popDuration = 0.3f;
-            maxScale = 2.5f;
-            shakeDuration = 0.1f;
-            shakeMagnitude = 0.3f;
-            dmgTextRect.pivot = new Vector2(0.5f, 0.9f);
+            text.fontSize = 10f;
+            text.fontStyle = FontStyles.Bold;
+            moveSpeed = 1.3f;
         }
-        else if(type == "tick")
+        else if (type == "tick")
         {
-            moveSpeed = 0.5f;
-            style = FontStyles.Normal;
-            popDuration = 0.1f;
-            size = 5f;
-            maxScale = 0.6f;
-            shakeDuration = 0f;
-            shakeMagnitude = 0f;
-            dmgTextRect.pivot = new Vector2(0.5f, 1.1f);
+            text.fontSize = 4f;
+            text.fontStyle = FontStyles.Normal;
+            moveSpeed = 0.7f;
         }
 
-        if(element == "fire")
-        {
+        // ---------------------------
+        // ELEMENT COLORS
+        // ---------------------------
+        if (element == "fire")
             color = Color.red;
-        
-        } else if(element == "ice")
-        {
+        else if (element == "ice")
             color = Color.cyan;
-        }      
-        
 
         text.color = color;
-        text.fontSize = size;
-        text.fontStyle = style;
 
         StopAllCoroutines();
-        StartCoroutine(AnimateText(popDuration, maxScale));
+        StartCoroutine(FloatAndFade());
     }
-    IEnumerator AnimateText(float popDuration, float maxScale)
+
+    IEnumerator FloatAndFade()
     {
-        float elapsed = 0f;
-        Vector3 startPos = transform.position;
-        startPos += new Vector3(Random.Range(-0.3f, 0.3f), 0, 0); // slight random offset
-        Vector3 baseScale = transform.localScale;
+        float t = 0f;
+        Vector3 start = transform.position;
 
-        Color currentColor = color;
-
-        while (elapsed < lifetime)
+        while (t < lifetime)
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / lifetime;
+            t += Time.deltaTime;
 
-            // Move upward
-            transform.position = startPos + Vector3.up * moveSpeed * elapsed;
+            transform.position = start + Vector3.up * (moveSpeed * t);
 
-            // Fade out
-            currentColor.a = Mathf.Lerp(1f, 0f, t);
-            text.color = currentColor;
-
-            // Pop scale
-            if (elapsed < popDuration)
-            {
-                float popT = elapsed / popDuration;
-                float scale = Mathf.Lerp(1f, maxScale, popT);
-                transform.localScale = baseScale * scale;
-            }
-            else
-            {
-                float shrinkT = (elapsed - popDuration) / (lifetime - popDuration);
-                float scale = Mathf.Lerp(maxScale, 1f, shrinkT);
-                transform.localScale = baseScale * scale;
-            }
-
-            // 💥 Optional text shake for playerhit
-            if (shakeDuration > 0f && elapsed < shakeDuration)
-            {
-                transform.localPosition += new Vector3(
-                    Random.Range(-shakeMagnitude, shakeMagnitude),
-                    Random.Range(-shakeMagnitude, shakeMagnitude),
-                    0
-                );
-            }
+            Color c = text.color;
+            c.a = 1f - (t / lifetime);
+            text.color = c;
 
             yield return null;
         }
 
-        OnDestroyEvent?.Invoke();
         Destroy(gameObject);
     }
 }
