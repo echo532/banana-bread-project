@@ -10,7 +10,9 @@ public class EnemyDamageHandler : MonoBehaviour
     private TickSystem tickSystem = new TickSystem();
 
     [SerializeField] private SpriteRenderer spriteRenderer;
+    
     private Color originalColor;
+    [SerializeField] private Color burnColor = new Color(1f, 0.5f, 0f); // orange
 
     public GameObject DamageTextPrefab;
 
@@ -37,6 +39,7 @@ public class EnemyDamageHandler : MonoBehaviour
     {
         HandleIncomingDamage();
         HandleStatusEffects();
+        UpdateVisuals();
     }
 
     // ---------------------------
@@ -160,5 +163,13 @@ public class EnemyDamageHandler : MonoBehaviour
     public bool HasEffect(string id)
     {
         return activeEffects.Exists(e => e.Id == id);
+    }
+    private void UpdateVisuals()
+    {
+        bool isBurning = HasEffect("burn");
+
+        if (spriteRenderer == null) return;
+
+        spriteRenderer.color = isBurning ? burnColor : originalColor;
     }
 }
