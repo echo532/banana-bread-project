@@ -1,16 +1,28 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StatusIcon : MonoBehaviour
 {
     [SerializeField] private EnemyDamageHandler enemy;
     [SerializeField] private string statusId = "burn";
 
-    [SerializeField] private UnityEngine.UI.Image icon;
+    [SerializeField] private Image icon;
+    [SerializeField] private Image cooldownFill;
 
     void Update()
     {
         if (enemy == null) return;
 
-        icon.enabled = enemy.HasEffect(statusId);
+        var effect = enemy.GetEffect(statusId);
+
+        bool active = effect != null;
+
+        icon.enabled = active;
+        cooldownFill.enabled = active;
+
+        if (!active) return;
+
+        cooldownFill.fillAmount =
+            1f - (effect.Timer / effect.Duration);
     }
 }

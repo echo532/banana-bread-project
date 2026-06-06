@@ -156,6 +156,14 @@ public class EnemyDamageHandler : MonoBehaviour
 
     public void ApplyStatus(StatusEffect effect)
     {
+        var existing = activeEffects.Find(e => e.Id == effect.Id);
+
+        if (existing != null)
+        {
+            existing.Timer = 0f; // refresh duration
+            return;
+        }
+
         effect.OnApply(healthSystem);
         activeEffects.Add(effect);
     }
@@ -163,6 +171,10 @@ public class EnemyDamageHandler : MonoBehaviour
     public bool HasEffect(string id)
     {
         return activeEffects.Exists(e => e.Id == id);
+    }
+    public StatusEffect GetEffect(string id)
+    {
+        return activeEffects.Find(e => e.Id == id);
     }
     private void UpdateVisuals()
     {
