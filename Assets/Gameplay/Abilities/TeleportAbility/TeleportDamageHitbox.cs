@@ -2,15 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TeleportDamageHitbox : MonoBehaviour, IDamageDealer, ITickDmg
+public class TeleportDamageHitbox : MonoBehaviour, IDamageDealer
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public int damage = 5;
     public float lifetime = 0.2f;
-
-    private int damagePerTick = 1;
-
-    private int duration = 3; // Duration of damage in seconds
 
 
     public int Damage
@@ -20,9 +16,6 @@ public class TeleportDamageHitbox : MonoBehaviour, IDamageDealer, ITickDmg
     }
 
     public string Element => "fire";
-
-    public int DamagePerTick { get => damagePerTick; set => damagePerTick = value; }
-    public int Duration { get => duration; set => duration = value; }
     
     
     private EnemyDamageHandler damageHandler;

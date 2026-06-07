@@ -43,6 +43,12 @@ public class DamageText : MonoBehaviour
             text.fontStyle = FontStyles.Normal;
             moveSpeed = 0.7f;
         }
+        else if (type == "jolt")
+        {
+            text.fontSize = 4f;
+            text.fontStyle = FontStyles.Normal;
+            moveSpeed = 0.7f;
+        }
 
         // ---------------------------
         // ELEMENT COLORS
@@ -51,7 +57,8 @@ public class DamageText : MonoBehaviour
             color = Color.red;
         else if (element == "ice")
             color = Color.cyan;
-
+        else if (element == "lightning")
+            color = Color.purple;
         text.color = color;
 
         StopAllCoroutines();

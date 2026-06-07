@@ -10,9 +10,11 @@ public class EnemyDamageHandler : MonoBehaviour
     private TickSystem tickSystem = new TickSystem();
 
     [SerializeField] private SpriteRenderer spriteRenderer;
-    
+
     private Color originalColor;
-    [SerializeField] private Color burnColor = new Color(1f, 0.5f, 0f); // orange
+    [SerializeField] private Color burnColor = new Color(1f, 0.5f, 0f);
+
+    public static List<EnemyDamageHandler> JoltedEnemies = new();
 
     public GameObject DamageTextPrefab;
 
@@ -60,7 +62,7 @@ public class EnemyDamageHandler : MonoBehaviour
     // ---------------------------
     private void HandleIncomingDamage()
     {
-        // Tick system (DO NOT bypass DealDamage)
+        // Existing tick system
         tickSystem.Update(Time.deltaTime, damageHandler.tickDamage, DealDamage);
 
         // Projectiles
@@ -70,7 +72,6 @@ public class EnemyDamageHandler : MonoBehaviour
             {
                 DealDamage(w.projectile.Damage, w.projectile.Element, "normal");
 
-                // Example: fire → burn
                 if (w.projectile.Element == "fire")
                 {
                     ApplyStatus(new BurnStatusEffect(DealDamage)
@@ -79,8 +80,17 @@ public class EnemyDamageHandler : MonoBehaviour
                         Duration = 5f
                     });
                 }
+
+                if (w.projectile.Element == "lightning")
+                {
+                    ApplyStatus(new JoltStatusEffect()
+                    {
+                        Duration = 5f
+                    });
+                }
             }
         }
+
         damageHandler.projectiles.Clear();
 
         // Melee / contact damage
@@ -89,13 +99,31 @@ public class EnemyDamageHandler : MonoBehaviour
             if (w.dealer.Damage > 0)
             {
                 DealDamage(w.dealer.Damage, w.dealer.Element, "normal");
+
+                if (w.dealer.Element == "fire")
+                {
+                    ApplyStatus(new BurnStatusEffect(DealDamage)
+                    {
+                        damagePerTick = 2,
+                        Duration = 5f
+                    });
+                }
+
+                if (w.dealer.Element == "lightning")
+                {
+                    ApplyStatus(new JoltStatusEffect()
+                    {
+                        Duration = 5f
+                    });
+                }
             }
         }
+
         damageHandler.damageDealers.Clear();
     }
 
     // ---------------------------
-    // UNIFIED DAMAGE FUNCTION (IMPORTANT)
+    // DAMAGE
     // ---------------------------
     private void DealDamage(int damage, string element, string type = "normal")
     {
@@ -103,16 +131,47 @@ public class EnemyDamageHandler : MonoBehaviour
 
         ShowDamageNumber(damage, element, type);
 
+        // Trigger chain lightning only from normal hits
+        if (HasEffect("jolt") && type != "jolt")
+        {
+            TriggerJolt();
+        }
+
         CheckDeath();
     }
 
     // ---------------------------
-    // DEATH CHECK (USED BY EVERYTHING)
+    // JOLT SYSTEM
+    // ---------------------------
+    private void TriggerJolt()
+    {
+        foreach (var enemy in JoltedEnemies)
+        {
+            if (enemy == null || enemy == this)
+                continue;
+
+            enemy.ReceiveJoltDamage(1);
+        }
+    }
+
+    public void ReceiveJoltDamage(int damage)
+    {
+        healthSystem.TakeDamage(damage);
+
+        ShowDamageNumber(damage, "lightning", "jolt");
+
+        CheckDeath();
+    }
+
+    // ---------------------------
+    // DEATH CHECK
     // ---------------------------
     private void CheckDeath()
     {
         if (healthSystem.CurrentHealth <= 0)
         {
+            JoltedEnemies.Remove(this);
+
             Destroy(gameObject);
         }
     }
@@ -148,6 +207,11 @@ public class EnemyDamageHandler : MonoBehaviour
 
             if (effect.IsExpired)
             {
+                if (effect.Id == "jolt")
+                {
+                    JoltedEnemies.Remove(this);
+                }
+
                 effect.OnExpire(healthSystem);
                 activeEffects.RemoveAt(i);
             }
@@ -160,22 +224,35 @@ public class EnemyDamageHandler : MonoBehaviour
 
         if (existing != null)
         {
-            existing.Timer = 0f; // refresh duration
+            existing.Timer = 0f;
             return;
         }
 
         effect.OnApply(healthSystem);
         activeEffects.Add(effect);
+
+        if (effect.Id == "jolt")
+        {
+            if (!JoltedEnemies.Contains(this))
+            {
+                JoltedEnemies.Add(this);
+            }
+        }
     }
 
     public bool HasEffect(string id)
     {
         return activeEffects.Exists(e => e.Id == id);
     }
+
     public StatusEffect GetEffect(string id)
     {
         return activeEffects.Find(e => e.Id == id);
     }
+
+    // ---------------------------
+    // VISUALS
+    // ---------------------------
     private void UpdateVisuals()
     {
         bool isBurning = HasEffect("burn");

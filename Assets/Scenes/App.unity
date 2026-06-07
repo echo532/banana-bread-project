@@ -886,6 +886,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7726634436252139609, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: debugElement
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8124090030144922827, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
       propertyPath: spriteRenderer
       value: 
@@ -1890,6 +1894,10 @@ PrefabInstance:
       propertyPath: enemy
       value: 
       objectReference: {fileID: 630007711}
+    - target: {fileID: 3970169174138036487, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5803624672040266058, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
       propertyPath: m_Enabled
       value: 0
