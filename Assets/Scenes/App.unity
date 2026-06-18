@@ -894,6 +894,10 @@ PrefabInstance:
       propertyPath: spriteRenderer
       value: 
       objectReference: {fileID: 297793954}
+    - target: {fileID: 8624619144183453077, guid: 5146737fe68a47d4c8eb8eca20b3da6f, type: 3}
+      propertyPath: maxHealth
+      value: 127
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1912,7 +1916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7964070529861942368, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
       propertyPath: maxHealth
-      value: 1000
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7964070529861942368, guid: 8bd2a7d029c10f3458406b0396263506, type: 3}
       propertyPath: moveSpeed

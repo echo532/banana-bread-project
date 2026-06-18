@@ -22,11 +22,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public int critChance = 50;
     [SerializeField] public float critDmg = .5f;
 
-    [SerializeField] public int maxHealth = 100;
+    [SerializeField] public int maxHealth = 127;
 
 
     void Awake()
     {
+
+        GameData.PlayerMaxHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;

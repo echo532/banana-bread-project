@@ -46,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
         if(currentEnemies == 0)
         {
             // Respawn enemies
-            SceneManager.LoadScene("StartMenu");
+            SceneManager.LoadScene("Shop");
         }
     }
 
